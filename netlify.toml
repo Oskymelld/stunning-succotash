@@ -1,0 +1,19 @@
+# Netlify configuration.
+
+[build]
+  # Vite outputs the production site to dist/
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Pin Node to a version Vite 6 supports.
+  NODE_VERSION = "20"
+
+# SPA fallback: this is a single-page app (React Router handles routing in the
+# browser). Without this, refreshing or directly visiting a route like /blog
+# would return a 404. This rewrites all unknown paths to index.html so the
+# router can take over.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
