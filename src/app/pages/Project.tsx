@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router";
 import { motion } from "motion/react";
 import { projects } from "../data/projects";
 import { ArrowLeft, ExternalLink, Calendar, User } from "lucide-react";
+import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 
 export function Project() {
   const { slug } = useParams();
@@ -67,7 +68,7 @@ export function Project() {
         transition={{ delay: 0.2 }}
         className="w-full aspect-video rounded-[2rem] overflow-hidden mb-16 border border-white/10 relative"
       >
-        <img 
+        <ImageWithFallback 
           src={project.image} 
           alt={project.title} 
           className="w-full h-full object-cover"

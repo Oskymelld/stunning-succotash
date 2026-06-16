@@ -5,41 +5,41 @@ const MILESTONES = [
   {
     year: "2013",
     title: "Graduate Design Engineer",
-    desc: "Began my journey bridging the gap between product ideation and engineering execution.",
+    desc: "Began my journey at Dyson NPI Floorcare, driving end-to-end product innovation and delivery of novel floor cleaning technologies.",
     y: 300
   },
   {
-    year: "2015",
+    year: "2016",
     title: "Design Engineer",
-    desc: "Deepened my focus on developing robust product architectures while maintaining design integrity.",
+    desc: "Worked end-to-end on delivering the 'omni-glide' product, scaling user-centred methods from prototyping to market launch.",
     y: 750
   },
   {
-    year: "2017",
+    year: "2019",
     title: "Senior Design Engineer",
-    desc: "Led complex product development cycles, optimizing both form and function for mass production.",
+    desc: "Led design sprints and co-creation workshops. Successfully led a team of 10 cross-discipline engineers and secured 11 global patents.",
     y: 1200
   },
   {
-    year: "2019",
-    title: "Lead Design Engineer",
-    desc: "Started integrating UX Design and User Research to ensure products solved real human problems before engineering began.",
+    year: "2022",
+    title: "Lead Design Eng / UX Designer",
+    desc: "Transitioned into robotics, defining the multi-modal experience for a robot 'homecare assistant' using data-driven decisions.",
     y: 1650
   },
   {
-    year: "2021",
+    year: "2024-start",
     title: "Senior UX Designer",
-    desc: "Transitioned fully into digital experiences. Focused heavily on user journeys, research, and interface design.",
+    desc: "Led discovery and service definition for the MyDyson ecosystem, orchestrating end-to-end journeys across connected global markets.",
     y: 2100
   },
   {
-    year: "2023",
+    year: "2024-end",
     title: "Service Designer",
-    desc: "Expanded my scope to map end-to-end service blueprints, aligning user needs with business operations.",
+    desc: "Specializing in mapping complex systems, ecosystem mapping, and translating research insights into seamless interaction flows.",
     y: 2550
   },
   {
-    year: "2024",
+    year: "2025",
     title: "Business Owner",
     desc: "Founded my own practice. All previous disciplines converge alongside leatherwork craftsmanship and running a business.",
     y: 3000
@@ -176,7 +176,7 @@ export function CareerTimeline() {
   });
 
   return (
-    <section id="long-about" className="relative w-full bg-[#152028] py-20 mt-20 rounded-[3rem] overflow-hidden shadow-2xl border border-white/5">
+    <section ref={containerRef} id="long-about" className="relative w-full bg-[#152028] py-20 mt-20 rounded-[3rem] overflow-hidden shadow-2xl border border-white/5" style={{ position: "relative" }}>
       <div className="max-w-5xl mx-auto px-6 md:px-12 mb-12 relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-8">
          <div className="max-w-xl">
            <h2 className="text-4xl sm:text-5xl font-black font-['Outfit',sans-serif] text-white tracking-tight">The Journey.</h2>
@@ -194,7 +194,7 @@ export function CareerTimeline() {
          </div>
       </div>
 
-      <div ref={containerRef} className="relative w-full max-w-5xl mx-auto h-[3600px]">
+      <div className="relative w-full max-w-5xl mx-auto h-[3600px]">
         {/* SVG Background Map */}
         <svg
             className="absolute inset-0 w-full h-full pointer-events-none z-0"
@@ -208,26 +208,49 @@ export function CareerTimeline() {
 
         {/* Content Overlays */}
         <div className="absolute inset-0 z-10 pointer-events-none">
-          {MILESTONES.map((m) => (
-            <motion.div 
-              key={m.year} 
-              className="absolute w-[85%] md:w-[450px] left-6 md:left-12 pointer-events-auto" 
-              style={{ top: m.y - 40 }}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-150px" }}
-              transition={{ duration: 0.6 }}
-            >
-               <div className="text-[#FF6D1F] font-black text-6xl opacity-10 font-['Outfit',sans-serif] -mb-6 ml-[-4px] select-none">{m.year}</div>
-               <div className="bg-[#152028]/95 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-2xl relative group hover:border-[#076E74]/50 transition-colors">
-                 {/* Connection dot */}
-                 <div className="w-4 h-4 bg-[#C9D8DB] rounded-full absolute -left-2 top-10 shadow-[0_0_15px_rgba(201,216,219,0.8)] border-[3px] border-[#152028]" />
+          {MILESTONES.map((m) => {
+            const isFinal = m.title === "Business Owner";
+            const displayYear = m.year.split('-')[0]; // Extract just the year part for display
+            
+            return (
+              <motion.div 
+                key={m.year} 
+                className={`absolute pointer-events-auto ${isFinal ? 'w-[85%] md:w-[580px]' : 'w-[85%] md:w-[450px]'} left-6 md:left-12`} 
+                style={{ top: m.y - 40 }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-150px" }}
+                transition={{ duration: 0.6 }}
+              >
+                 <div className="text-[#FF6D1F] font-black text-6xl opacity-10 font-['Outfit',sans-serif] -mb-6 ml-[-4px] select-none">{displayYear}</div>
                  
-                 <h3 className="text-2xl font-bold text-white mb-3 font-['Outfit',sans-serif]">{m.title}</h3>
-                 <p className="text-zinc-400 leading-relaxed font-medium">{m.desc}</p>
-               </div>
-            </motion.div>
-          ))}
+                 {isFinal ? (
+                   <div className="flex flex-col md:flex-row gap-4 relative">
+                     {/* Connection dot for the pair */}
+                     <div className="w-4 h-4 bg-[#C9D8DB] rounded-full absolute -left-2 top-10 shadow-[0_0_15px_rgba(201,216,219,0.8)] border-[3px] border-[#152028] z-20" />
+                     
+                     <div className="flex-1 bg-[#152028]/95 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-2xl group hover:border-[#F59E0B]/50 transition-colors">
+                       <h3 className="text-xl font-bold text-white mb-2 font-['Outfit',sans-serif]">Business Owner</h3>
+                       <p className="text-sm text-zinc-400 leading-relaxed font-medium">Converging all previous disciplines into strategic business value and running my own practice.</p>
+                     </div>
+
+                     <div className="flex-1 bg-[#152028]/95 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-2xl group hover:border-[#8B5CF6]/50 transition-colors">
+                       <h3 className="text-xl font-bold text-white mb-2 font-['Outfit',sans-serif]">Craftsman</h3>
+                       <p className="text-sm text-zinc-400 leading-relaxed font-medium">Practicing physical leatherwork, focusing on tactile details, materiality, and pure craft.</p>
+                     </div>
+                   </div>
+                 ) : (
+                   <div className="bg-[#152028]/95 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-2xl relative group hover:border-[#076E74]/50 transition-colors">
+                     {/* Connection dot */}
+                     <div className="w-4 h-4 bg-[#C9D8DB] rounded-full absolute -left-2 top-10 shadow-[0_0_15px_rgba(201,216,219,0.8)] border-[3px] border-[#152028]" />
+                     
+                     <h3 className="text-2xl font-bold text-white mb-3 font-['Outfit',sans-serif]">{m.title}</h3>
+                     <p className="text-zinc-400 leading-relaxed font-medium">{m.desc}</p>
+                   </div>
+                 )}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
