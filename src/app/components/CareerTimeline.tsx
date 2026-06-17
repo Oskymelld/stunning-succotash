@@ -1,73 +1,37 @@
-import { motion, useScroll, useSpring } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
 const MILESTONES = [
-  {
-    year: "2013",
-    title: "Graduate Design Engineer",
-    desc: "Began my journey at Dyson NPI Floorcare, driving end-to-end product innovation and delivery of novel floor cleaning technologies.",
-    y: 300
-  },
-  {
-    year: "2016",
-    title: "Design Engineer",
-    desc: "Worked end-to-end on delivering the 'omni-glide' product, scaling user-centred methods from prototyping to market launch.",
-    y: 750
-  },
-  {
-    year: "2019",
-    title: "Senior Design Engineer",
-    desc: "Led design sprints and co-creation workshops. Successfully led a team of 10 cross-discipline engineers and secured 11 global patents.",
-    y: 1200
-  },
-  {
-    year: "2022",
-    title: "Lead Design Eng / UX Designer",
-    desc: "Transitioned into robotics, defining the multi-modal experience for a robot 'homecare assistant' using data-driven decisions.",
-    y: 1650
-  },
-  {
-    year: "2024-start",
-    title: "Senior UX Designer",
-    desc: "Led discovery and service definition for the MyDyson ecosystem, orchestrating end-to-end journeys across connected global markets.",
-    y: 2100
-  },
-  {
-    year: "2024-end",
-    title: "Service Designer",
-    desc: "Specializing in mapping complex systems, ecosystem mapping, and translating research insights into seamless interaction flows.",
-    y: 2550
-  },
-  {
-    year: "2025",
-    title: "Business Owner",
-    desc: "Founded my own practice. All previous disciplines converge alongside leatherwork craftsmanship and running a business.",
-    y: 3000
-  }
+  { year: "2013", title: "Graduate Design Engineer", desc: "Began my journey at Dyson NPI Floorcare, driving end-to-end product innovation and delivery of novel floor cleaning technologies.", x: 200, y: 50 },
+  { year: "2016", title: "Design Engineer", desc: "Worked end-to-end on delivering the 'omni-glide' product, scaling user-centred methods from prototyping to market launch.", x: 600, y: 400 },
+  { year: "2019", title: "Senior Design Engineer", desc: "Led design sprints and co-creation workshops. Successfully led a team of 10 cross-discipline engineers and secured 11 global patents.", x: 1000, y: 50 },
+  { year: "2022", title: "Lead Design Eng / UX Designer", desc: "Transitioned into robotics, defining the multi-modal experience for a robot 'homecare assistant' using data-driven decisions.", x: 1400, y: 400 },
+  { year: "2024-start", title: "Senior UX Designer", desc: "Led discovery and service definition for the MyDyson ecosystem, orchestrating end-to-end journeys across connected global markets.", x: 1800, y: 50 },
+  { year: "2024-end", title: "Service Designer", desc: "Specializing in mapping complex systems, ecosystem mapping, and translating research insights into seamless interaction flows.", x: 2200, y: 400 },
+  { year: "2025", title: "Business Owner", desc: "Founded my own practice. All previous disciplines converge alongside leatherwork craftsmanship and running a business.", x: 2700, y: 50 }
 ];
 
-const getPath = (start: {x: number, y: number, fromSide?: boolean}, points: {x: number, y: number}[]) => {
+const getHorizontalPath = (start: {x: number, y: number, fromSide?: boolean}, points: {x: number, y: number}[]) => {
   let d = '';
   let currentX = start.x;
   let currentY = start.y;
 
   if (start.fromSide) {
-     d += `M 1200 ${start.y} C 1050 ${start.y}, ${start.x} ${start.y + 50}, ${start.x} ${start.y + 100}`;
-     currentY = start.y + 100;
+     d += `M ${start.x} 1200 C ${start.x} 1000, ${start.x + 50} ${start.y}, ${start.x + 100} ${start.y}`;
+     currentX = start.x + 100;
   } else {
      d += `M ${start.x} ${start.y}`;
   }
 
   points.forEach(p => {
-      if (p.y - 150 > currentY) {
-          d += ` L ${currentX} ${p.y - 150}`;
+      if (p.x - 150 > currentX) {
+          d += ` L ${p.x - 150} ${currentY}`;
       }
-      d += ` C ${currentX} ${p.y - 100}, ${p.x} ${p.y - 100}, ${p.x} ${p.y - 50}`;
+      d += ` C ${p.x - 75} ${currentY}, ${p.x - 75} ${p.y}, ${p.x} ${p.y}`;
       currentX = p.x;
-      currentY = p.y - 50;
+      currentY = p.y;
   });
 
-  d += ` L ${currentX} 3800`;
   return d;
 };
 
@@ -75,87 +39,74 @@ const STREAMS = [
   {
      color: "#FF6D1F",
      name: "Product Design",
-     path: getPath({x: 600, y: -100}, [
-       {x: 600, y: 300},
-       {x: 600, y: 750},
-       {x: 600, y: 1200},
-       {x: 600, y: 1650},
-       {x: 900, y: 2100},
-       {x: 900, y: 2550},
-       {x: 600, y: 3000}
+     path: getHorizontalPath({x: 0, y: 250}, [
+       {x: 200, y: 250}, {x: 600, y: 250}, {x: 1000, y: 250}, {x: 1400, y: 250},
+       {x: 1800, y: 290}, {x: 2200, y: 290}, {x: 2700, y: 250}, {x: 3600, y: 250}
      ])
   },
   {
      color: "#C9D8DB",
      name: "Design Engineering",
-     path: getPath({x: 640, y: -100}, [
-       {x: 640, y: 300},
-       {x: 640, y: 750},
-       {x: 640, y: 1200},
-       {x: 640, y: 1650},
-       {x: 940, y: 2100},
-       {x: 940, y: 2550},
-       {x: 640, y: 3000}
+     path: getHorizontalPath({x: 0, y: 270}, [
+       {x: 200, y: 270}, {x: 600, y: 270}, {x: 1000, y: 270}, {x: 1400, y: 270},
+       {x: 1800, y: 310}, {x: 2200, y: 310}, {x: 2700, y: 270}, {x: 3600, y: 270}
      ])
   },
   {
      color: "#076E74",
      name: "UX Design",
-     path: getPath({x: 680, y: 1400, fromSide: true}, [
-       {x: 680, y: 1650},
-       {x: 600, y: 2100},
-       {x: 600, y: 2550},
-       {x: 680, y: 3000}
+     path: getHorizontalPath({x: 1200, y: 290, fromSide: true}, [
+       {x: 1400, y: 290}, {x: 1800, y: 250}, {x: 2200, y: 250}, {x: 2700, y: 290}, {x: 3600, y: 290}
      ])
   },
   {
      color: "#EAECE9",
      name: "User Research",
-     path: getPath({x: 720, y: 1450, fromSide: true}, [
-       {x: 720, y: 1650},
-       {x: 640, y: 2100},
-       {x: 640, y: 2550},
-       {x: 720, y: 3000}
+     path: getHorizontalPath({x: 1250, y: 310, fromSide: true}, [
+       {x: 1400, y: 310}, {x: 1800, y: 270}, {x: 2200, y: 270}, {x: 2700, y: 310}, {x: 3600, y: 310}
      ])
   },
   {
      color: "#10B981",
      name: "Service Design",
-     path: getPath({x: 680, y: 2300, fromSide: true}, [
-       {x: 680, y: 2550},
-       {x: 760, y: 3000}
+     path: getHorizontalPath({x: 2000, y: 330, fromSide: true}, [
+       {x: 2200, y: 330}, {x: 2700, y: 330}, {x: 3600, y: 330}
      ])
   },
   {
      color: "#F59E0B",
      name: "Craftsman (Leatherwork)",
-     path: getPath({x: 800, y: 2750, fromSide: true}, [
-       {x: 800, y: 3000}
+     path: getHorizontalPath({x: 2450, y: 350, fromSide: true}, [
+       {x: 2700, y: 350}, {x: 3600, y: 350}
      ])
   },
   {
      color: "#8B5CF6",
      name: "Business Owner",
-     path: getPath({x: 840, y: 2800, fromSide: true}, [
-       {x: 840, y: 3000}
+     path: getHorizontalPath({x: 2500, y: 370, fromSide: true}, [
+       {x: 2700, y: 370}, {x: 3600, y: 370}
      ])
   }
 ];
 
-const MultiLineStream = ({ d, color, pathLength }: { d: string, color: string, pathLength: any }) => {
+const MultiLineStream = ({ d, color, name }: { d: string, color: string, name: string }) => {
   const baseProps = {
     d,
     fill: "none",
     vectorEffect: "non-scaling-stroke",
-    style: { pathLength },
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
+    initial: { pathLength: 0 },
+    whileInView: { pathLength: 1 },
+    viewport: { once: true, margin: "-50px" },
+    transition: { duration: 2.5, ease: "easeOut" }
   };
   return (
-    <g>
-      <motion.path {...baseProps} stroke={color} strokeWidth={24} />
+    <g className="stream-group group cursor-crosshair">
+      <title>{name}</title>
+      <motion.path {...baseProps} stroke={color} strokeWidth={24} className="opacity-80 group-hover:opacity-100 transition-opacity" />
       <motion.path {...baseProps} stroke="#152028" strokeWidth={18} />
-      <motion.path {...baseProps} stroke={color} strokeWidth={12} />
+      <motion.path {...baseProps} stroke={color} strokeWidth={12} className="opacity-90 group-hover:opacity-100 transition-opacity" />
       <motion.path {...baseProps} stroke="#152028" strokeWidth={6} />
       <motion.path {...baseProps} stroke={color} strokeWidth={2} />
     </g>
@@ -163,94 +114,141 @@ const MultiLineStream = ({ d, color, pathLength }: { d: string, color: string, p
 };
 
 export function CareerTimeline() {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start center", "end bottom"]
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 40,
-    damping: 15,
-    restDelta: 0.001
-  });
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { scrollXProgress } = useScroll({ container: scrollContainerRef });
+  const thumbLeft = useTransform(scrollXProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section ref={containerRef} id="long-about" className="relative w-full bg-[#152028] py-20 mt-20 rounded-[3rem] overflow-hidden shadow-2xl border border-white/5" style={{ position: "relative" }}>
-      <div className="max-w-5xl mx-auto px-6 md:px-12 mb-12 relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-8">
-         <div className="max-w-xl">
-           <h2 className="text-4xl sm:text-5xl font-black font-['Outfit',sans-serif] text-white tracking-tight">The Journey.</h2>
-           <p className="text-zinc-400 mt-4 text-lg">A visual map of my career path, tracking how different disciplines have converged to shape my multidisciplinary approach.</p>
-         </div>
-         
-         {/* Legend */}
-         <div className="grid grid-cols-2 gap-x-6 gap-y-3 bg-[#152028]/80 p-5 rounded-2xl border border-white/10 backdrop-blur-xl shrink-0">
-            {STREAMS.map(s => (
-              <div key={s.name} className="flex items-center gap-3">
-                <div className="w-5 h-1.5 rounded-full shadow-sm" style={{ backgroundColor: s.color }} />
-                <span className="text-sm font-semibold text-zinc-300">{s.name}</span>
-              </div>
-            ))}
-         </div>
+    <section id="long-about" className="relative w-full bg-[#152028] py-16 overflow-hidden shadow-2xl border border-white/5 mx-[10px] mt-[80px] mb-[0px] rounded-[16px]" style={{ position: "relative" }}>
+      
+      {/* Header text */}
+      <div className="px-8 md:px-16 mb-6 relative z-10">
+        <h2 className="text-4xl sm:text-5xl font-black font-['Outfit',sans-serif] text-white tracking-tight">The Journey.</h2>
+        <p className="text-zinc-400 mt-4 text-lg max-w-xl">A visual map of my career path, tracking how different disciplines have converged to shape my multidisciplinary approach.</p>
+        <p className="text-[#FF6D1F] font-bold mt-2 text-sm uppercase tracking-widest animate-pulse flex items-center gap-2">
+          <span>Scroll horizontally</span>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </p>
       </div>
 
-      <div className="relative w-full max-w-5xl mx-auto h-[3600px]">
-        {/* SVG Background Map */}
-        <svg
-            className="absolute inset-0 w-full h-full pointer-events-none z-0"
-            viewBox="0 0 1000 3600"
-            preserveAspectRatio="none"
-        >
-            {STREAMS.map((s, i) => (
-              <MultiLineStream key={i} d={s.path} color={s.color} pathLength={smoothProgress} />
-            ))}
-        </svg>
+      {/* Floating Menu Key */}
+      <div className="absolute left-8 top-[200px] z-30 flex flex-col gap-2 bg-[#152028]/90 backdrop-blur-md rounded-[40px] border-2 border-white/10 shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)] px-[8px] py-[12px] items-start transition-all duration-300 pointer-events-auto hidden md:flex">
+        {STREAMS.map(s => (
+          <div key={s.name} className="group flex items-center rounded-full hover:bg-[#FF6D1F]/20 transition-all duration-300 overflow-hidden cursor-pointer">
+             <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                <div className="w-5 h-1.5 rounded-full shadow-sm" style={{ backgroundColor: s.color }} />
+             </div>
+             <div className="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 group-hover:pr-5 transition-all duration-300 overflow-hidden whitespace-nowrap font-bold text-sm text-white">
+                {s.name}
+             </div>
+          </div>
+        ))}
+      </div>
 
-        {/* Content Overlays */}
-        <div className="absolute inset-0 z-10 pointer-events-none">
-          {MILESTONES.map((m) => {
-            const isFinal = m.title === "Business Owner";
-            const displayYear = m.year.split('-')[0]; // Extract just the year part for display
-            
-            return (
-              <motion.div 
-                key={m.year} 
-                className={`absolute pointer-events-auto ${isFinal ? 'w-[85%] md:w-[580px]' : 'w-[85%] md:w-[450px]'} left-6 md:left-12`} 
-                style={{ top: m.y - 40 }}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-150px" }}
-                transition={{ duration: 0.6 }}
-              >
-                 <div className="text-[#FF6D1F] font-black text-6xl opacity-10 font-['Outfit',sans-serif] -mb-6 ml-[-4px] select-none">{displayYear}</div>
-                 
-                 {isFinal ? (
-                   <div className="flex flex-col md:flex-row gap-4 relative">
-                     {/* Connection dot for the pair */}
-                     <div className="w-4 h-4 bg-[#C9D8DB] rounded-full absolute -left-2 top-10 shadow-[0_0_15px_rgba(201,216,219,0.8)] border-[3px] border-[#152028] z-20" />
-                     
-                     <div className="flex-1 bg-[#152028]/95 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-2xl group hover:border-[#F59E0B]/50 transition-colors">
-                       <h3 className="text-xl font-bold text-white mb-2 font-['Outfit',sans-serif]">Business Owner</h3>
-                       <p className="text-sm text-zinc-400 leading-relaxed font-medium">Converging all previous disciplines into strategic business value and running my own practice.</p>
-                     </div>
+      {/* Scrollable Container */}
+      <div 
+        className="w-full overflow-x-auto overflow-y-hidden cursor-grab active:cursor-grabbing pb-8 relative z-20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" 
+        ref={scrollContainerRef}
+      >
+        <div className="relative h-[650px] w-[3600px]">
+          
+          {/* SVG Background Map */}
+          <svg
+              className="absolute inset-0 w-full h-full pointer-events-auto z-0"
+              viewBox="0 0 3600 650"
+              preserveAspectRatio="none"
+          >
+              {STREAMS.map((s, i) => (
+                <MultiLineStream key={i} d={s.path} color={s.color} name={s.name} />
+              ))}
+          </svg>
 
-                     <div className="flex-1 bg-[#152028]/95 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-2xl group hover:border-[#8B5CF6]/50 transition-colors">
-                       <h3 className="text-xl font-bold text-white mb-2 font-['Outfit',sans-serif]">Craftsman</h3>
-                       <p className="text-sm text-zinc-400 leading-relaxed font-medium">Practicing physical leatherwork, focusing on tactile details, materiality, and pure craft.</p>
+          {/* Content Overlays */}
+          <div className="absolute inset-0 z-10 pointer-events-none">
+            {MILESTONES.map((m) => {
+              const isFinal = m.title === "Business Owner";
+              const displayYear = m.year.split('-')[0];
+              const isTop = m.y < 200;
+              
+              return (
+                <motion.div 
+                  key={m.year} 
+                  className="absolute pointer-events-auto" 
+                  style={{ top: m.y, left: m.x }}
+                  initial={{ opacity: 0, y: isTop ? -20 : 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-150px" }}
+                  transition={{ duration: 0.6 }}
+                >
+                   {/* Connection visual */}
+                   {isTop ? (
+                     <div className="absolute top-full left-1/2 -translate-x-1/2 flex flex-col items-center">
+                        <div className="w-3 h-3 bg-[#C9D8DB] rounded-full shadow-[0_0_15px_rgba(201,216,219,0.8)] border-2 border-[#152028] mt-3 z-20" />
+                        <div className="w-0.5 h-[60px] bg-gradient-to-b from-[#C9D8DB]/40 to-transparent" />
                      </div>
-                   </div>
-                 ) : (
-                   <div className="bg-[#152028]/95 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-2xl relative group hover:border-[#076E74]/50 transition-colors">
-                     {/* Connection dot */}
-                     <div className="w-4 h-4 bg-[#C9D8DB] rounded-full absolute -left-2 top-10 shadow-[0_0_15px_rgba(201,216,219,0.8)] border-[3px] border-[#152028]" />
-                     
-                     <h3 className="text-2xl font-bold text-white mb-3 font-['Outfit',sans-serif]">{m.title}</h3>
-                     <p className="text-zinc-400 leading-relaxed font-medium">{m.desc}</p>
-                   </div>
-                 )}
-              </motion.div>
-            );
-          })}
+                   ) : (
+                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 flex flex-col items-center justify-end">
+                        <div className="w-0.5 h-[60px] bg-gradient-to-t from-[#C9D8DB]/40 to-transparent" />
+                        <div className="w-3 h-3 bg-[#C9D8DB] rounded-full shadow-[0_0_15px_rgba(201,216,219,0.8)] border-2 border-[#152028] mb-3 z-20" />
+                     </div>
+                   )}
+
+                   <div className="text-[#FF6D1F] font-black text-6xl opacity-10 font-['Outfit',sans-serif] -mb-6 ml-4 select-none">{displayYear}</div>
+                   
+                   {isFinal ? (
+                     <div className="flex flex-row gap-6 relative w-[680px]">
+                       <div className="flex-1 bg-[#152028]/95 backdrop-blur-xl p-6 rounded-[2rem] border border-white/10 shadow-2xl group hover:border-[#F59E0B]/50 transition-colors">
+                         <h3 className="text-xl font-bold text-white mb-2 font-['Outfit',sans-serif]">Business Owner</h3>
+                         <p className="text-sm text-zinc-400 leading-relaxed font-medium">Converging all previous disciplines into strategic business value and running my own practice.</p>
+                       </div>
+                       <div className="flex-1 bg-[#152028]/95 backdrop-blur-xl p-6 rounded-[2rem] border border-white/10 shadow-2xl group hover:border-[#8B5CF6]/50 transition-colors">
+                         <h3 className="text-xl font-bold text-white mb-2 font-['Outfit',sans-serif]">Craftsman</h3>
+                         <p className="text-sm text-zinc-400 leading-relaxed font-medium">Practicing physical leatherwork, focusing on tactile details, materiality, and pure craft.</p>
+                       </div>
+                     </div>
+                   ) : (
+                     <div className="bg-[#152028]/95 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-2xl relative group hover:border-[#076E74]/50 transition-colors w-[340px]">
+                       <h3 className="text-2xl font-bold text-white mb-3 font-['Outfit',sans-serif]">{m.title}</h3>
+                       <p className="text-zinc-400 leading-relaxed font-medium">{m.desc}</p>
+                     </div>
+                   )}
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Custom Timeline Scrollbar */}
+      <div className="w-full max-w-5xl mx-auto mt-4 mb-4 relative h-12 flex items-center px-8 md:px-16 z-30">
+        <div className="relative w-full h-full flex items-center">
+          {/* The Line */}
+          <div className="absolute left-0 right-0 h-1 bg-white/10 rounded-full" />
+          
+          {/* The Markers */}
+          <div className="absolute left-0 right-0 flex justify-between px-0">
+            {MILESTONES.map((m, i) => {
+              const displayYear = m.year.split('-')[0];
+              return (
+                <div key={i} className="flex flex-col items-center relative group cursor-pointer" onClick={() => {
+                   if (scrollContainerRef.current) {
+                     // Approximate scroll to this point
+                     const scrollTarget = (i / (MILESTONES.length - 1)) * (scrollContainerRef.current.scrollWidth - scrollContainerRef.current.clientWidth);
+                     scrollContainerRef.current.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+                   }
+                }}>
+                  <div className="w-3 h-3 rounded-full bg-white/20 group-hover:bg-white/50 transition-colors z-0" />
+                  <span className="absolute top-5 text-xs font-bold text-zinc-500 group-hover:text-white transition-colors font-['Outfit',sans-serif] select-none">{displayYear}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* The Moving Circle */}
+          <motion.div 
+            className="absolute w-5 h-5 bg-[#FF6D1F] rounded-full shadow-[0_0_15px_#FF6D1F] border-2 border-[#152028] z-10 pointer-events-none"
+            style={{ left: thumbLeft, x: "-50%" }}
+          />
         </div>
       </div>
     </section>

@@ -10,6 +10,8 @@ const SPHERE_URL = "https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0
 
 import { CareerTimeline } from "../components/CareerTimeline";
 
+import { PhotoGallery } from "../components/PhotoGallery";
+
 export function Home() {
   return (
     <div className="flex flex-col gap-6 sm:gap-12 relative" style={{ position: "relative" }}>
@@ -38,7 +40,7 @@ export function Home() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full relative flex flex-col xl:flex-row gap-4 xl:gap-6 mt-4 z-10 xl:h-[calc(100vh-7rem)] xl:min-h-[600px] xl:max-h-[850px]"
+        className="w-full relative flex flex-col xl:flex-row gap-4 xl:gap-6 z-10 xl:h-[calc(100vh-7rem)] xl:min-h-[600px] xl:max-h-[850px]"
       >
         {/* Side Navigation (Vertical Text) */}
         
@@ -209,6 +211,9 @@ export function Home() {
           ))}
         </div>
       </section>
+
+      {/* PHOTO GALLERY SECTION */}
+      <PhotoGallery />
 
     </div>
   );
