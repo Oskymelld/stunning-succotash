@@ -46,29 +46,24 @@ export function Galleries({ galleries }: { galleries: Gallery[] }) {
             </div>
           )}
 
-          {/* Editorial mosaic: tiles pack edge-to-edge, every 5th one is
-              featured larger for rhythm. Dense flow fills the gaps. */}
-          <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[150px] sm:auto-rows-[200px] gap-3 sm:gap-4 grid-flow-dense">
-            {gallery.images.map((img, i) => {
-              const featured = i % 5 === 0;
-              return (
-                <button
-                  key={img.alt}
-                  type="button"
-                  onClick={() => setActive(img)}
-                  aria-label={`Expand image: ${img.alt}`}
-                  className={`group relative overflow-hidden rounded-xl bg-[#152028] border border-white/10 cursor-zoom-in transition-transform duration-300 ease-out hover:z-10 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6d1f] ${
-                    featured ? "col-span-2 row-span-2" : ""
-                  }`}
-                >
-                  <ImageWithFallback
-                    src={img.src}
-                    alt={img.alt}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </button>
-              );
-            })}
+          {/* Masonry columns: images keep their natural aspect ratio (no
+              cropping) and flow into balanced columns. */}
+          <div className="columns-2 md:columns-3 gap-3 sm:gap-4">
+            {gallery.images.map((img) => (
+              <button
+                key={img.alt}
+                type="button"
+                onClick={() => setActive(img)}
+                aria-label={`Expand image: ${img.alt}`}
+                className="group relative block w-full break-inside-avoid mb-3 sm:mb-4 overflow-hidden bg-[#152028] cursor-zoom-in transition-transform duration-300 ease-out hover:z-10 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6d1f]"
+              >
+                <ImageWithFallback
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
+                />
+              </button>
+            ))}
           </div>
         </section>
       ))}
@@ -101,7 +96,7 @@ export function Galleries({ galleries }: { galleries: Gallery[] }) {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: "spring", stiffness: 260, damping: 28 }}
-              className="max-w-full max-h-full object-contain rounded-xl shadow-2xl"
+              className="max-w-full max-h-full object-contain shadow-2xl"
             />
           </motion.div>
         )}
