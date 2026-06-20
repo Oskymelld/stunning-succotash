@@ -19,11 +19,6 @@ import reboHifi05 from "../../imports/rebo/hifi-05.png";
 // Types
 // ---------------------------------------------------------------------------
 
-export interface CaseStudyLink {
-  label: string;
-  url: string;
-}
-
 export interface FeatureItem {
   title: string;
   body: string;
@@ -34,18 +29,31 @@ export interface GalleryImage {
   alt: string;
 }
 
-// An ordered case study is built from a sequence of these blocks. Add more
-// block types here as future case studies need them.
-export type CaseStudyBlock =
-  | { type: "lede"; eyebrow?: string; text: string }
-  | { type: "heading"; text: string }
-  | { type: "paragraph"; text: string }
-  | { type: "featureList"; heading: string; numbered?: boolean; items: FeatureItem[] }
-  | { type: "gallery"; label: string; link?: CaseStudyLink; images: GalleryImage[] };
+export interface Gallery {
+  label?: string;
+  link?: { label: string; url: string };
+  images: GalleryImage[];
+}
 
+export interface KeyLearning {
+  title: string;
+  body?: string;
+  bullets?: string[];
+}
+
+export interface FinalState {
+  image: string;
+  alt?: string;
+  items: FeatureItem[];
+}
+
+// Extra sections shown only on full case-study projects, in this order.
 export interface CaseStudy {
-  links?: CaseStudyLink[];
-  blocks: CaseStudyBlock[];
+  overview?: string;
+  galleries?: Gallery[];
+  approach?: FeatureItem[];
+  finalState?: FinalState;
+  keyLearnings?: KeyLearning[];
 }
 
 export interface Project {
@@ -57,11 +65,23 @@ export interface Project {
   description: string;
   role: string;
   year: string;
-  // Simple projects use challenge/solution. Rich case studies use `caseStudy`.
+  // Top-of-page summary cards (shown on every project page).
   challenge?: string;
   solution?: string;
+  deliverables?: string[];
+  liveUrl?: string;
+  liveLabel?: string;
+  // Rich case-study sections below the summary (optional).
   caseStudy?: CaseStudy;
 }
+
+// Used when a project doesn't specify its own deliverables list.
+export const DEFAULT_DELIVERABLES = [
+  "UX Research",
+  "UI Design",
+  "Interactive Prototype",
+  "Design System",
+];
 
 // ---------------------------------------------------------------------------
 // Projects
@@ -113,44 +133,18 @@ export const projects: Project[] = [
     description: "A self-directed case study designing Rebo, a food-prep mobile app — from discovery through to a functional prototype.",
     role: "UX & UI Design (self-directed)",
     year: "2023", // TODO: confirm the year from your records
+    // DRAFT — first-pass challenge/solution, please refine with your real copy.
+    challenge: "Planning meals and prepping food during a busy week is easy to put off. Existing apps felt cluttered and time-consuming, so good intentions often gave way to last-minute, wasteful choices.",
+    solution: "A focused, friendly app that streamlines planning and prep into a few clear steps — helping people decide faster and waste less, designed mobile-first with an accessible, high-contrast UI.",
+    deliverables: ["UX Research", "Wireframing", "UI Design", "Interactive Prototype"],
+    liveUrl: "https://www.figma.com/file/e7fyhgHUxUAQDOsy7bCY29/Rebo-Food-Prep-App?node-id=5-3390&type=design",
+    liveLabel: "Open in Figma",
     caseStudy: {
-      links: [
+      // DRAFT — first pass, please refine with your real intro copy.
+      overview:
+        "Rebo is a self-directed case study exploring how a mobile app could make everyday food preparation simpler, faster, and less wasteful. I took the project end to end — from initial discovery and problem framing through to a working, high-fidelity prototype — as a way to practice a complete UX/UI process on a problem I genuinely cared about.",
+      galleries: [
         {
-          label: "Rebo — Figma file",
-          url: "https://www.figma.com/file/e7fyhgHUxUAQDOsy7bCY29/Rebo-Food-Prep-App?node-id=5-3390&type=design",
-        },
-      ],
-      blocks: [
-        {
-          type: "lede",
-          eyebrow: "Overview",
-          // DRAFT — first pass, please refine with your real intro copy.
-          text: "Rebo is a self-directed case study exploring how a mobile app could make everyday food preparation simpler, faster, and less wasteful. I took the project end to end — from initial discovery and problem framing through to a working, high-fidelity prototype — as a way to practice a complete UX/UI process on a problem I genuinely cared about.",
-        },
-        {
-          type: "heading",
-          text: "Discovery & design",
-        },
-        {
-          type: "paragraph",
-          // DRAFT — first pass, please refine with your real discovery copy.
-          text: "I started by mapping the everyday frustrations around planning meals and prepping food, then used those insights to define the core flows the app needed to support. From there I moved into low-fidelity wireframes to test the structure and navigation before committing to any visual design.",
-        },
-        {
-          type: "featureList",
-          heading: "Approach",
-          numbered: true,
-          items: [
-            // DRAFT bodies for Discover / Define / Develop — refine these three.
-            { title: "Discover", body: "Research the problem space — the habits, pain points, and motivations of people prepping food at home." },
-            { title: "Define", body: "Translate the research into clear problem statements and the key user flows the product needs to support." },
-            { title: "Develop", body: "Move from low-fidelity wireframes into testable screens, iterating on structure and content." },
-            // From your original content (verbatim):
-            { title: "Trial", body: "Learn where there are weaknesses in the design & iterate back around for a refined version." },
-          ],
-        },
-        {
-          type: "gallery",
           label: "Lo-fi prototype",
           link: {
             label: "Open in Figma",
@@ -165,17 +159,6 @@ export const projects: Project[] = [
           ],
         },
         {
-          type: "featureList",
-          heading: "High fidelity phase",
-          // From your original content (verbatim):
-          items: [
-            { title: "Iterate", body: "Learn from early prototypes & start to refine the design." },
-            { title: "High fidelity mock-ups", body: "Build out components for the high fidelity version — colour themes, font usage etc." },
-            { title: "Accessibility", body: "Checks on accessibility, reworking the colour scheme for increased contrast and font changes to be more readable." },
-          ],
-        },
-        {
-          type: "gallery",
           label: "Hi-fi mockups",
           images: [
             { src: reboHifi01, alt: "Rebo high-fidelity mockup — 1" },
@@ -185,14 +168,38 @@ export const projects: Project[] = [
             { src: reboHifi05, alt: "Rebo high-fidelity mockup — 5" },
           ],
         },
+      ],
+      approach: [
+        // DRAFT bodies for Discover / Define / Develop — refine these three.
+        { title: "Discover", body: "Research the problem space — the habits, pain points, and motivations of people prepping food at home." },
+        { title: "Define", body: "Translate the research into clear problem statements and the key user flows the product needs to support." },
+        { title: "Develop", body: "Move from low-fidelity wireframes into testable screens, iterating on structure and content." },
+        // From your original content (verbatim):
+        { title: "Trial", body: "Learn where there are weaknesses in the design & iterate back around for a refined version." },
+      ],
+      finalState: {
+        image: reboHifi01,
+        alt: "Rebo high-fidelity prototype on a phone",
+        // From your original "high fidelity phase" content (verbatim):
+        items: [
+          { title: "Iterate", body: "Learn from early prototypes & start to refine the design." },
+          { title: "High fidelity mock-ups", body: "Build out components for the high fidelity version — colour themes, font usage etc." },
+          { title: "Accessibility", body: "Checks on accessibility, reworking the colour scheme for increased contrast and font changes to be more readable." },
+        ],
+      },
+      // DRAFT — placeholder key learnings, please replace with your real reflections.
+      keyLearnings: [
         {
-          type: "heading",
-          text: "Functional prototype",
+          title: "Start lo-fi, decide fast",
+          body: "Testing structure in low fidelity before touching visuals kept the project moving and avoided polishing the wrong ideas.",
+          bullets: [
+            "Wireframes surfaced navigation problems early",
+            "Cheaper to change a flow than a finished screen",
+          ],
         },
         {
-          type: "paragraph",
-          // DRAFT — first pass for the closing "next steps", please refine.
-          text: "If I were to continue with this project, the next steps would be to run usability sessions on the high-fidelity prototype to validate the core flows, fold the findings back into the design, and build out the remaining edge-case screens before moving toward a developer handoff.",
+          title: "Accessibility shaped the visual design",
+          body: "Designing for contrast and readability from the start led to a cleaner, more confident UI rather than a constraint bolted on at the end.",
         },
       ],
     },
