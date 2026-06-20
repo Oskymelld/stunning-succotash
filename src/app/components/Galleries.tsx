@@ -46,22 +46,29 @@ export function Galleries({ galleries }: { galleries: Gallery[] }) {
             </div>
           )}
 
-          <div className="flex flex-wrap justify-center gap-5 sm:gap-6">
-            {gallery.images.map((img) => (
-              <button
-                key={img.alt}
-                type="button"
-                onClick={() => setActive(img)}
-                aria-label={`Expand image: ${img.alt}`}
-                className="group w-[150px] sm:w-[230px] aspect-[3/4] rounded-[14px] overflow-hidden bg-[#152028] border-2 border-[#ffccb1] shadow-[6px_6px_0px_0px_#ffa779] cursor-zoom-in transition-transform duration-300 ease-out hover:scale-[1.04] hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6d1f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
-              >
-                <ImageWithFallback
-                  src={img.src}
-                  alt={img.alt}
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                />
-              </button>
-            ))}
+          {/* Editorial mosaic: tiles pack edge-to-edge, every 5th one is
+              featured larger for rhythm. Dense flow fills the gaps. */}
+          <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[150px] sm:auto-rows-[200px] gap-3 sm:gap-4 grid-flow-dense">
+            {gallery.images.map((img, i) => {
+              const featured = i % 5 === 0;
+              return (
+                <button
+                  key={img.alt}
+                  type="button"
+                  onClick={() => setActive(img)}
+                  aria-label={`Expand image: ${img.alt}`}
+                  className={`group relative overflow-hidden rounded-xl bg-[#152028] border border-white/10 cursor-zoom-in transition-transform duration-300 ease-out hover:z-10 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6d1f] ${
+                    featured ? "col-span-2 row-span-2" : ""
+                  }`}
+                >
+                  <ImageWithFallback
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </button>
+              );
+            })}
           </div>
         </section>
       ))}
