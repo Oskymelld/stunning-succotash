@@ -56,6 +56,27 @@ export interface CaseStudy {
   keyLearnings?: KeyLearning[];
 }
 
+// The names of the toggleable page sections (everything below the hero).
+// Control which appear — and in what order — via a project's `sections` list.
+export type SectionKey =
+  | "summary" // Challenge / Solution + Deliverables cards
+  | "overview"
+  | "galleries"
+  | "approach"
+  | "finalState"
+  | "keyLearnings";
+
+// Order used when a project doesn't define its own `sections` list.
+// A section only renders if it's listed here AND that project has content for it.
+export const DEFAULT_SECTION_ORDER: SectionKey[] = [
+  "summary",
+  "overview",
+  "galleries",
+  "approach",
+  "finalState",
+  "keyLearnings",
+];
+
 export interface Project {
   slug: string;
   title: string;
@@ -73,6 +94,10 @@ export interface Project {
   liveLabel?: string;
   // Rich case-study sections below the summary (optional).
   caseStudy?: CaseStudy;
+  // Which sections to show, and in what order. Omit a name to hide that
+  // section; reorder the list to reorder the page. Leave this out entirely
+  // to use DEFAULT_SECTION_ORDER (shows every section that has content).
+  sections?: SectionKey[];
 }
 
 // Used when a project doesn't specify its own deliverables list.
@@ -139,6 +164,10 @@ export const projects: Project[] = [
     deliverables: ["UX Research", "Wireframing", "UI Design", "Interactive Prototype"],
     liveUrl: "https://www.figma.com/file/e7fyhgHUxUAQDOsy7bCY29/Rebo-Food-Prep-App?node-id=5-3390&type=design",
     liveLabel: "Open in Figma",
+    // Sections shown on this page, in order. Delete a line to hide that
+    // section (its content stays in the file); reorder lines to reorder the
+    // page. Remove this whole `sections` block to fall back to the default.
+    sections: ["summary", "overview", "galleries", "approach", "finalState", "keyLearnings"],
     caseStudy: {
       // DRAFT — first pass, please refine with your real intro copy.
       overview:
