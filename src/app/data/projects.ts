@@ -15,6 +15,15 @@ import reboHifi03 from "../../imports/rebo/hifi-03.png";
 import reboHifi04 from "../../imports/rebo/hifi-04.png";
 import reboHifi05 from "../../imports/rebo/hifi-05.png";
 
+// Neon Cloud case study assets (financial-skills web + mobile app).
+import ncDevices from "../../imports/neon-cloud/devices.png";
+import ncPersonas from "../../imports/neon-cloud/personas.png";
+import ncUserflows from "../../imports/neon-cloud/userflows.png";
+import ncSketches from "../../imports/neon-cloud/sketches.png";
+import ncLofi from "../../imports/neon-cloud/lofi.png";
+import ncDesignSystem from "../../imports/neon-cloud/designsystem.png";
+import ncPhone from "../../imports/neon-cloud/phone.png";
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -259,5 +268,59 @@ export const projects: Project[] = [
         },
       ],
     },
+  },
+  {
+    slug: "neon-cloud",
+    title: "Neon Cloud",
+    category: "Web & Mobile App • UX/UI",
+    color: "#22D3EE", // Cyan — "neon"
+    image: ncDevices,
+    description: "A paired web and mobile app making financial knowledge accessible to young adults in the UK — designed end to end over six weeks for an open 'social good' brief.",
+    role: "UX & UI Design (self-directed)",
+    year: "2022", // TODO: confirm the year from your records
+    // Content mapped from the case study PDF.
+    challenge: "Young adults rarely get high-quality advice that is impartial, especially when they are from low-income areas. How might we make that information accessible and trustworthy?",
+    solution: "Neon Cloud — a pairing of digital products (a web app and a dedicated mobile app) that improves financial-knowledge accessibility for young adults in the UK, with an approachable, accessible design and an anonymous way to reach expert conversation.",
+    deliverables: ["UX Research", "User Personas", "User Flows", "Wireframes", "Hi-fi Prototype", "Design System"],
+    caseStudy: {
+      overview:
+        "Part of my Google UX qualification — an open brief to design a multi-platform product for 'social good'. Over six weeks I researched how young adults seek and find financial advice, interviewed people in the target age bracket, and designed a cross-platform web and mobile product — Neon Cloud — to make trustworthy financial guidance accessible and approachable. This was the first project I learnt to use Figma to build a visual design language and reuse components across multiple screen sizes. ",
+      // The project phases shown as a click-through walkthrough (like Rebo).
+      story: {
+        label: "Project walkthrough",
+        slides: [
+          { src: ncPersonas, alt: "Neon Cloud persona — Lucas", caption: "Empathise — interviews and research distilled into personas to guide the design." },
+          { src: ncUserflows, alt: "Neon Cloud user flow", caption: "Empathise — user flows mapped the real pain points across the journey." },
+          { src: ncSketches, alt: "Wireframe sketches", caption: "Conceptualise — sketches and affinity mapping to structure the flows." },
+          { src: ncLofi, alt: "First low-fidelity prototype", caption: "Conceptualise — the first low-fi prototype, tested with the original interview candidate." },
+          { src: ncDesignSystem, alt: "Neon Cloud design system", caption: "Design — a mobile-first, accessible UI built on the Neon Cloud design system: palette, components and type." },
+        ],
+      },
+      finalState: {
+        image: ncPhone,
+        alt: "Neon Cloud budgeting screen on mobile",
+        items: [
+          {
+            title: "Mobile-first",
+            body: "A personal budget that's easy to understand, can be recalled later with a code, and supports flexible ways to define income.",
+          },
+          {
+            title: "Accessibility",
+            body: "High-contrast colours for readability, fonts that conform to dyslexia reading guides, and large, simple graphics for visual impairments.",
+          },
+          {
+            title: "Cross-platform",
+            body: "Delivered across iPhone (a dedicated app), iPad and desktop (a responsive website) from a single design language.",
+          },
+        ],
+      },
+      // From the case study "Outcomes" — taking 6 weeks, start to finish.
+      keyLearnings: [
+        { title: "Deeper Figma skills", body: "Deepened my understanding of components in Figma while building an expandable system." },
+        { title: "Designing cross-platform", body: "Improved my process for ensuring cross-platform capabilities from one design language." },
+        { title: "Interview practice", body: "Practised and sharpened my user interview techniques. Learning to ask better questions and listen more effectively." },
+      ],
+    },
+    sections: ["summary", "overview", "story", "finalState", "keyLearnings"],
   },
 ];

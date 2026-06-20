@@ -151,11 +151,11 @@ export function Project() {
         <section className="my-20">
           <SectionHeading>Final State</SectionHeading>
           <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start">
-            <div className="shrink-0 w-[260px] aspect-[9/19] rounded-[2.5rem] border-8 border-[#1a1a1a] bg-[#152028] overflow-hidden shadow-2xl">
+            <div className="shrink-0 w-full max-w-[400px] aspect-square rounded-[16px] border border-white/10 bg-[#152028] overflow-hidden shadow-2xl">
               <ImageWithFallback
                 src={cs.finalState.image}
                 alt={cs.finalState.alt ?? "Final prototype"}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-top"
               />
             </div>
             <div className="flex-1 w-full grid grid-cols-1 gap-6">
