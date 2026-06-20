@@ -35,6 +35,18 @@ export interface Gallery {
   images: GalleryImage[];
 }
 
+export interface StorySlide {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+// A click-through slideshow opened full-screen from a "See the story" tile.
+export interface Story {
+  label?: string;
+  slides: StorySlide[];
+}
+
 export interface KeyLearning {
   title: string;
   body?: string;
@@ -50,6 +62,7 @@ export interface FinalState {
 // Extra sections shown only on full case-study projects, in this order.
 export interface CaseStudy {
   overview?: string;
+  story?: Story;
   galleries?: Gallery[];
   approach?: FeatureItem[];
   finalState?: FinalState;
@@ -61,6 +74,7 @@ export interface CaseStudy {
 export type SectionKey =
   | "summary" // Challenge / Solution + Deliverables cards
   | "overview"
+  | "story" // "See the story" tile -> full-screen slideshow
   | "galleries"
   | "approach"
   | "finalState"
@@ -71,6 +85,7 @@ export type SectionKey =
 export const DEFAULT_SECTION_ORDER: SectionKey[] = [
   "summary",
   "overview",
+  "story",
   "galleries",
   "approach",
   "finalState",
@@ -167,11 +182,23 @@ export const projects: Project[] = [
     // Sections shown on this page, in order. Delete a line to hide that
     // section (its content stays in the file); reorder lines to reorder the
     // page. Remove this whole `sections` block to fall back to the default.
-    sections: ["summary", "overview", "galleries", "approach", "finalState", "keyLearnings"],
+    sections: ["summary", "overview", "story", "galleries", "approach", "finalState", "keyLearnings"],
     caseStudy: {
       // DRAFT — first pass, please refine with your real intro copy.
       overview:
         "Rebo is a self-directed case study exploring how a mobile app could make everyday food preparation simpler, faster, and less wasteful. I took the project end to end — from initial discovery and problem framing through to a working, high-fidelity prototype — as a way to practice a complete UX/UI process on a problem I genuinely cared about.",
+      // "See the story" slideshow. DRAFT — swap in your chosen story images and
+      // captions; currently reuses the hi-fi screens as a walkthrough.
+      story: {
+        label: "Walkthrough",
+        slides: [
+          { src: reboHifi01, alt: "Rebo story — 1", caption: "Onboarding and first impressions." },
+          { src: reboHifi02, alt: "Rebo story — 2", caption: "Browsing and planning meals." },
+          { src: reboHifi03, alt: "Rebo story — 3", caption: "Building a prep list." },
+          { src: reboHifi04, alt: "Rebo story — 4", caption: "Following a guided prep flow." },
+          { src: reboHifi05, alt: "Rebo story — 5", caption: "Tracking progress and results." },
+        ],
+      },
       galleries: [
         {
           label: "Lo-fi prototype",

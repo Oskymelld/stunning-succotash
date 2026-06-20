@@ -5,6 +5,7 @@ import type { FeatureItem, KeyLearning, SectionKey } from "../data/projects";
 import { ArrowLeft, ExternalLink, Calendar, User } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Galleries } from "../components/Galleries";
+import { StoryGallery } from "../components/StoryGallery";
 
 // Section heading used across the case-study sections (Outfit, large + bold).
 function SectionHeading({ children }: { children: React.ReactNode }) {
@@ -126,6 +127,9 @@ export function Project() {
           <p className="text-xl text-[#9f9fa9] leading-relaxed">{cs.overview}</p>
         </motion.section>
       ) : null,
+
+    story: () =>
+      cs?.story && cs.story.slides.length > 0 ? <StoryGallery story={cs.story} /> : null,
 
     galleries: () =>
       cs?.galleries && cs.galleries.length > 0 ? <Galleries galleries={cs.galleries} /> : null,
