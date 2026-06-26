@@ -15,6 +15,11 @@ import reboHifi03 from "../../imports/rebo/hifi-03.png";
 import reboHifi04 from "../../imports/rebo/hifi-04.png";
 import reboHifi05 from "../../imports/rebo/hifi-05.png";
 
+// Everbound Goods case study assets (founder-built leather goods brand).
+// TODO: replace these placeholder imports with real Everbound product photos.
+// Drop images into src/imports/everbound/ and update the paths below.
+import everboundHero from "../../imports/A_square_image_of_a_.png"; // PLACEHOLDER hero
+
 // Neon Cloud case study assets (financial-skills web + mobile app).
 import ncDevices from "../../imports/neon-cloud/devices.png";
 import ncPersonas from "../../imports/neon-cloud/personas.png";
@@ -76,6 +81,8 @@ export interface CaseStudy {
   approach?: FeatureItem[];
   finalState?: FinalState;
   keyLearnings?: KeyLearning[];
+  // Tools/techniques learned — shown as tags under the Key Learnings section.
+  knowledgeGained?: string[];
 }
 
 // The names of the toggleable page sections (everything below the hero).
@@ -322,5 +329,89 @@ export const projects: Project[] = [
       ],
     },
     sections: ["summary", "overview", "story", "finalState", "keyLearnings"],
+  },
+  {
+    slug: "everbound-goods",
+    title: "Everbound Goods",
+    category: "Brand & Product • Founder",
+    color: "#8B5E3C", // Saddle brown — vegetable-tanned leather
+    image: everboundHero,
+    description:
+      "Founding and building Everbound Goods — a handmade leather goods brand from Bristol — after a decade designing consumer electronics. Brand, product and craft, end to end.",
+    role: "Founder, Maker & Designer",
+    year: "2024 – Present", // TODO: confirm the year you started Everbound
+    challenge:
+      "After more than a decade designing consumer electronics, I'd grown disconnected from the disposability of the industry — products built to be replaced, not kept. I wanted to return to making physical things with soul: objects that age with grace, carry stories, and look after their owner.",
+    solution:
+      "Everbound Goods — a handmade leather goods brand built on quiet luxury without excess and sustainability without compromise. Every belt, wallet and key holder is stitched, assembled and finished by hand in Bristol, using vegetable-tanned leather sourced exclusively from British tanneries.",
+    deliverables: [
+      "Brand Identity",
+      "Product Design",
+      "Leathercraft",
+      "E-commerce (Shopify)",
+      "Photography & Content",
+    ],
+    liveUrl: "https://everboundgoods.com",
+    liveLabel: "Visit everboundgoods.com",
+    sections: ["summary", "overview", "approach", "finalState", "keyLearnings"],
+    caseStudy: {
+      overview:
+        "Everbound Goods is the business I founded to bring craftsmanship back into my work. After years designing consumer electronics — fast cycles, hidden materials, products designed to be replaced — I missed the tactile, enduring nature of physical things. Everbound is the answer to that: a small leather goods brand where I control the whole stack, from sourcing the hide to stitching the final piece to building the store it sells in. It's a case study in starting something from nothing — defining a point of view, building it by hand, and bringing it to market.",
+      // Brand-building phases, framed like a design process.
+      approach: [
+        {
+          title: "Define the why",
+          body: "Everything starts from a clear philosophy: quiet luxury without excess, sustainable without compromise. True quality lies not only in what you see, but in the thought, skill and honesty stitched into every detail. That belief shaped every decision that followed.",
+        },
+        {
+          title: "Source with integrity",
+          body: "Leather is hand-selected and sourced exclusively from British tanneries — vegetable-tanned using natural tannins, a byproduct of the meat industry that's biodegradable and traceable. The materials are exactly what they appear to be: no hidden layers, no deceptive finishes. A scuff should tell a story, not reveal a shortcut.",
+        },
+        {
+          title: "Make by hand",
+          body: "Every piece is stitched, assembled and finished by hand in the Bristol workshop, using traditional techniques adapted for modern life. Nothing leaves until it's checked and right — pieces built to deepen in character over a lifetime of adventure, not crack, flake or fall apart.",
+        },
+        {
+          title: "Build the brand",
+          body: "From the name and identity through to product photography and the Shopify storefront, I built the brand around the craft — designing a buying experience that feels as considered and honest as the goods themselves.",
+        },
+      ],
+      finalState: {
+        image: everboundHero,
+        alt: "Everbound Goods handmade leather product", // TODO: real product hero
+        items: [
+          {
+            title: "A real product line",
+            body: "Belts, wallets, key holders and glasses cases — including the Tuscany, Holstein and Saddle Brown collections — handcrafted and sold direct.",
+          },
+          {
+            title: "A traceable supply chain",
+            body: "Every hide is hand-selected from British tanneries, with the story respected from the animal the hide came from to the point it reaches the customer's hands.",
+          },
+          {
+            title: "Built to last a lifetime",
+            body: "Pieces designed to age with grace and stand the test of time — the opposite of the disposable cycles I came from.",
+          },
+        ],
+      },
+      keyLearnings: [
+        {
+          title: "Owning the whole stack is the hardest and best part",
+          body: "Doing everything — sourcing, making, branding, selling — is relentless, but it's also where the integrity comes from. Nothing is outsourced to a place where corners could be cut.",
+        },
+        {
+          title: "Constraints from values make better decisions",
+          body: "Committing to British-only sourcing and honest materials narrowed my options — and made every choice clearer and easier to stand behind.",
+          bullets: [
+            "Sustainability stopped being a marketing line and became a sourcing rule",
+            "A clear philosophy removed second-guessing on design and product calls",
+          ],
+        },
+        {
+          title: "Design thinking transfers to business building",
+          body: "A decade of product design gave me the toolkit — research, prototyping, iteration, attention to detail — to build a brand. The medium changed from screens to leather; the process didn't.",
+        },
+      ],
+    },
   },
 ];

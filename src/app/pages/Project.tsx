@@ -167,23 +167,44 @@ export function Project() {
         </section>
       ) : null,
 
-    keyLearnings: () =>
-      cs?.keyLearnings && cs.keyLearnings.length > 0 ? (
+    keyLearnings: () => {
+      const hasLearnings = !!cs?.keyLearnings && cs.keyLearnings.length > 0;
+      const hasKnowledge = !!cs?.knowledgeGained && cs.knowledgeGained.length > 0;
+      if (!hasLearnings && !hasKnowledge) return null;
+      return (
         <section className="my-20">
           <SectionHeading>Key Learnings</SectionHeading>
-          <div className="grid grid-cols-1 gap-6">
-            {cs.keyLearnings.map((learning: KeyLearning, i) => (
-              <NumberedCard
-                key={learning.title}
-                index={i + 1}
-                item={{ title: learning.title, body: learning.body ?? "" }}
-                bullets={learning.bullets}
-                variant="learning"
-              />
-            ))}
-          </div>
+          {hasLearnings && (
+            <div className="grid grid-cols-1 gap-6">
+              {cs!.keyLearnings!.map((learning: KeyLearning, i) => (
+                <NumberedCard
+                  key={learning.title}
+                  index={i + 1}
+                  item={{ title: learning.title, body: learning.body ?? "" }}
+                  bullets={learning.bullets}
+                  variant="learning"
+                />
+              ))}
+            </div>
+          )}
+          {hasKnowledge && (
+            <div className={hasLearnings ? "mt-10" : ""}>
+              <h3 className="text-lg font-bold font-['Outfit',sans-serif] text-zinc-300 mb-4">Knowledge gained</h3>
+              <div className="flex flex-wrap gap-3">
+                {cs!.knowledgeGained!.map((item) => (
+                  <span
+                    key={item}
+                    className="px-4 py-2 rounded-full bg-[rgba(7,110,116,0.1)] border border-white/10 text-zinc-200 text-sm font-medium"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
-      ) : null,
+      );
+    },
   };
 
   const order = project.sections ?? DEFAULT_SECTION_ORDER;
