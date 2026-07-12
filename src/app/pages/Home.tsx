@@ -1,8 +1,11 @@
-import { motion } from "motion/react";
+import { useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "motion/react";
 import { projects } from "../data/projects";
 import { HeroV3 } from "../v3/HeroV3";
 import { AboutV3 } from "../v3/AboutV3";
 import { ProjectCardV3, type ProjectCardData } from "../v3/ProjectCardV3";
+import { ProjectExpandedV3, type ExpandedProject } from "../v3/ProjectExpandedV3";
 import { ProcessDiagram, CareerDiagram } from "../v3/Diagrams";
 import { SectionLabel, TickRail } from "../v3/primitives";
 import type { MotifKey } from "../v3/Motifs";
@@ -26,6 +29,13 @@ const cards: ProjectCardData[] = projects.map((p, i) => ({
   image: p.image,
 }));
 
+// Same projects, richer data for the full-screen expanded view.
+const expandedItems: ExpandedProject[] = projects.map((p, i) => ({
+  project: p,
+  index: cards[i].index,
+  motif: cards[i].motif,
+}));
+
 const fade = {
   initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
@@ -34,6 +44,8 @@ const fade = {
 };
 
 export function Home() {
+  // Index of the project open in the full-screen expanded view, or null.
+  const [expanded, setExpanded] = useState<number | null>(null);
   return (
     <div className="flex flex-col gap-20 sm:gap-28">
       {/* HERO */}
@@ -57,10 +69,25 @@ export function Home() {
           Selected projects
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-          {cards.map((c) => (
-            <ProjectCardV3 key={c.slug} data={c} />
+          {cards.map((c, i) => (
+            <ProjectCardV3 key={c.slug} data={c} onExpand={() => setExpanded(i)} />
           ))}
         </div>
+        {/* Portal escapes this motion.section — its transform would otherwise
+            trap the fixed overlay and leave it under the z-50 nav. */}
+        {createPortal(
+          <AnimatePresence>
+            {expanded !== null && (
+              <ProjectExpandedV3
+                items={expandedItems}
+                current={expanded}
+                onClose={() => setExpanded(null)}
+                onNavigate={setExpanded}
+              />
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
         <a href="#work" className="inline-block font-['Space_Mono',monospace] text-[13px] font-bold uppercase tracking-[0.05em] text-[#FE6219] hover:text-[#F36A36] transition-colors mt-8">
           View all work →
         </a>

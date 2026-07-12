@@ -121,6 +121,9 @@ export interface Project {
   challenge?: string;
   solution?: string;
   deliverables?: string[];
+  // Key skills used on the project — shown as "\ KEY SKILLS" tags in the
+  // expanded card view on the home page. Falls back to `deliverables`.
+  skills?: string[];
   liveUrl?: string;
   liveLabel?: string;
   // Rich case-study sections below the summary (optional).
@@ -154,7 +157,9 @@ export const projects: Project[] = [
     challenge: "Translating complex particle metrics into an easy-to-understand visual format for everyday users.",
     solution: "A dynamic dashboard that visualizing clean history with playful yet informative charts, driving user engagement.",
     role: "Lead UI Designer",
-    year: "2023"
+    year: "2023",
+    // DRAFT skills — refine with the real ones for this project.
+    skills: ["Prototyping", "Data Visualisation", "User Testing", "Design Systems", "IoT UX"]
   },
   {
     slug: "dyson-product-2",
@@ -166,7 +171,9 @@ export const projects: Project[] = [
     challenge: "Standing out in a saturated market and creating an e-commerce experience that feels as premium as the physical hardware.",
     solution: "By utilizing large-scale photography, a unique grid system, and micro-interactions, we brought the tactile feel of their products to the digital space.",
     role: "UI Designer & Developer",
-    year: "2024"
+    year: "2024",
+    // DRAFT skills — refine with the real ones for this project.
+    skills: ["Art Direction", "Interaction Design", "Motion Design", "E-commerce UX", "Design Systems"]
   },
   {
     slug: "nexus-analytics",
@@ -178,7 +185,9 @@ export const projects: Project[] = [
     challenge: "Data analysts were spending 8+ hours a day on the platform, leading to severe visual fatigue. The layout was also unstructured.",
     solution: "Implemented a strict bento-box grid system, a sophisticated dark color palette with high-contrast accent colors for critical metrics.",
     role: "UX Researcher & Designer",
-    year: "2023"
+    year: "2023",
+    // DRAFT skills — refine with the real ones for this project.
+    skills: ["UX Research", "Dashboard Design", "Design Systems", "Accessibility", "Data Visualisation"]
   },
   {
     slug: "rebo",
@@ -193,6 +202,8 @@ export const projects: Project[] = [
     challenge: "Planning meals and prepping food during a busy week is easy to put off. Existing apps felt cluttered and time-consuming, so good intentions often gave way to last-minute, wasteful choices.",
     solution: "A focused, friendly app that streamlines planning and prep into a few clear steps — helping people decide faster and waste less, designed mobile-first with an accessible, high-contrast UI.",
     deliverables: ["UX Research", "Wireframing", "UI Design", "Interactive Prototype"],
+    // DRAFT skills — refine with the real ones for this project.
+    skills: ["UX Research", "Wireframing", "Prototyping", "Usability Testing", "UI Design"],
     liveUrl: "https://www.figma.com/file/e7fyhgHUxUAQDOsy7bCY29/Rebo-Food-Prep-App?node-id=5-3390&type=design",
     liveLabel: "Open in Figma",
     // Sections shown on this page, in order. Delete a line to hide that
@@ -289,6 +300,8 @@ export const projects: Project[] = [
     challenge: "Young adults rarely get high-quality advice that is impartial, especially when they are from low-income areas. How might we make that information accessible and trustworthy?",
     solution: "Neon Cloud — a pairing of digital products (a web app and a dedicated mobile app) that improves financial-knowledge accessibility for young adults in the UK, with an approachable, accessible design and an anonymous way to reach expert conversation.",
     deliverables: ["UX Research", "User Personas", "User Flows", "Wireframes", "Hi-fi Prototype", "Design System"],
+    // DRAFT skills — refine with the real ones for this project.
+    skills: ["Customer Interviews", "User Personas", "User Flows", "Prototyping", "Accessibility"],
     caseStudy: {
       overview:
         "Part of my Google UX qualification — an open brief to design a multi-platform product for 'social good'. Over six weeks I researched how young adults seek and find financial advice, interviewed people in the target age bracket, and designed a cross-platform web and mobile product — Neon Cloud — to make trustworthy financial guidance accessible and approachable. This was the first project I learnt to use Figma to build a visual design language and reuse components across multiple screen sizes. ",
@@ -351,6 +364,8 @@ export const projects: Project[] = [
       "E-commerce (Shopify)",
       "Photography & Content",
     ],
+    // DRAFT skills — refine with the real ones for this project.
+    skills: ["Brand Identity", "Product Design", "Leathercraft", "Tooling Design", "Photography", "E-commerce"],
     liveUrl: "https://everboundgoods.com",
     liveLabel: "Visit everboundgoods.com",
     sections: ["summary", "overview", "approach", "finalState", "keyLearnings"],

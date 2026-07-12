@@ -3,13 +3,16 @@
 // Hover: flips on Y axis to an orange back showing the project photo. Text layout
 // is identical between faces; the back's copy is all black. Respects
 // prefers-reduced-motion (falls back to a crossfade via CSS).
+// An expand button fades in top-right on hover and opens the full-screen
+// expanded view (ProjectExpandedV3) instead of navigating.
 import { Link } from "react-router";
+import { Maximize2 } from "lucide-react";
 import { MOTIFS, type MotifKey } from "./Motifs";
 import { V3 } from "./tokens";
 
 const mono = "font-['Space_Mono',monospace] tracking-[0.05em] uppercase";
 
-function DotCluster({ color }: { color: string }) {
+export function DotCluster({ color }: { color: string }) {
   const dots = [];
   for (let r = 0; r < 4; r++)
     for (let q = 0; q < 6; q++)
@@ -26,10 +29,11 @@ export type ProjectCardData = {
   image: string;
 };
 
-export function ProjectCardV3({ data }: { data: ProjectCardData }) {
+export function ProjectCardV3({ data, onExpand }: { data: ProjectCardData; onExpand?: () => void }) {
   const Motif = MOTIFS[data.motif];
   return (
-    <Link to={`/project/${data.slug}`} className="group/card block [perspective:1200px] h-[420px]" aria-label={`${data.title} — read case study`}>
+    <div className="group/card relative h-[420px]">
+    <Link to={`/project/${data.slug}`} className="block [perspective:1200px] h-full" aria-label={`${data.title} — read case study`}>
       <div className="relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d] motion-safe:group-hover/card:[transform:rotateY(180deg)]">
         {/* FRONT */}
         <div className="absolute inset-0 [backface-visibility:hidden] rounded-[8px] border border-[#4D4D4D]/40 bg-[#0D0D0D] p-[22px] flex flex-col motion-reduce:transition-opacity motion-reduce:duration-300 motion-reduce:group-hover/card:opacity-0">
@@ -50,7 +54,8 @@ export function ProjectCardV3({ data }: { data: ProjectCardData }) {
         <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-[8px] bg-[#FE6219] p-[22px] flex flex-col motion-reduce:[transform:none] motion-reduce:opacity-0 motion-reduce:transition-opacity motion-reduce:duration-300 motion-reduce:group-hover/card:opacity-100">
           <div className="flex items-start justify-between h-9">
             <DotCluster color={V3.bg} />
-            <span className={`${mono} text-[10px] text-[#141414]`}>{data.index}</span>
+            {/* mr clears the expand button that overlays this corner on hover */}
+            <span className={`${mono} text-[10px] text-[#141414] ${onExpand ? "mr-11" : ""}`}>{data.index}</span>
           </div>
           <div className="flex-1 relative my-1">
             <img src={data.image} alt={data.title} className="absolute inset-0 w-full h-full object-cover rounded-[4px]" />
@@ -69,5 +74,16 @@ export function ProjectCardV3({ data }: { data: ProjectCardData }) {
         </div>
       </div>
     </Link>
+    {onExpand && (
+      <button
+        type="button"
+        onClick={onExpand}
+        aria-label={`Expand ${data.title}`}
+        className="absolute top-[15px] right-[15px] z-10 size-9 flex items-center justify-center rounded-[6px] border border-[#141414]/70 text-[#141414] opacity-0 group-hover/card:opacity-100 focus-visible:opacity-100 transition-all duration-300 hover:bg-[#141414] hover:text-[#FE6219] cursor-pointer"
+      >
+        <Maximize2 className="w-4 h-4" strokeWidth={1.5} />
+      </button>
+    )}
+    </div>
   );
 }
