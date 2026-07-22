@@ -22,7 +22,7 @@ const ITEMS: Item[] = [
   { key: "home", label: "Home", icon: Home, to: "/" },
   { key: "work", label: "Work", icon: Briefcase, hash: "/#work" },
   { key: "writing", label: "Writing", icon: PenLine, to: "/blog" },
-  { key: "about", label: "About Me", icon: User, hash: "/#about" },
+  { key: "about", label: "About Me", icon: User, to: "/about" },
   { key: "contact", label: "Contact", icon: Mail, href: "mailto:Tomcarter90@gmail.com" },
 ];
 

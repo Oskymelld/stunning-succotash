@@ -50,7 +50,7 @@ export function FooterV3() {
                 { label: "Home", to: "/" },
                 { label: "Work", hash: "/#work" },
                 { label: "Writing", to: "/blog" },
-                { label: "About", hash: "/#about" },
+                { label: "About", to: "/about" },
               ].map((l) =>
                 l.to ? (
                   <li key={l.label}><Link to={l.to} className={`${mono} text-[11px] text-[#A3A3A3] hover:text-[#F7F7F7] hover:underline transition-colors`}>{l.label}</Link></li>

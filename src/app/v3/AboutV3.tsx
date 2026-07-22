@@ -1,5 +1,6 @@
 // V3 About section — "V2 fact file" from Figma. Bracketed photo, heading + one
 // short paragraph, MORE ABOUT ME / LINKEDIN links, four-cell fact strip.
+import { Link } from "react-router";
 import { SectionLabel } from "./primitives";
 import PROFILE from "../../imports/profile-bw.png";
 
@@ -43,8 +44,7 @@ export function AboutV3() {
             first prototype to shipped product.
           </p>
           <div className="flex flex-wrap items-center gap-8 mt-8">
-            {/* "More about me" link removed until the /about page exists — it
-                pointed at the section it sits in. Reinstate with the real route. */}
+            <Link to="/about" className={`${mono} text-[13px] font-bold text-[#FE6219] hover:text-[#F36A36] transition-colors`}>More about me →</Link>
             <a href="https://www.linkedin.com/in/tom-carter-89403267/" target="_blank" rel="noopener noreferrer" className={`${mono} text-[13px] font-bold text-[#FE6219] hover:text-[#F36A36] transition-colors`}>
               LinkedIn ↗<span className="sr-only"> (opens in new tab)</span>
             </a>
