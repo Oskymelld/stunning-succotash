@@ -1,14 +1,22 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect, useRef } from "react";
+import { motion } from "motion/react";
 import { X, ExternalLink } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import type { Gallery, GalleryImage } from "../data/projects";
 
 // Renders one or more gallery rows. Images lift on hover and open in a
 // full-screen lightbox on click/tap; clicking the image again, clicking the
-// backdrop, or pressing Escape closes it.
+// backdrop, or pressing Escape closes it. The lightbox unmounts instantly on
+// close (no exit animation) so it can never linger invisibly over the page.
 export function Galleries({ galleries }: { galleries: Gallery[] }) {
   const [active, setActive] = useState<GalleryImage | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  // While open, keyboard focus stays inside the lightbox (starting on the
+  // close button) and returns to the thumbnail that opened it on close.
+  useFocusTrap(dialogRef, closeRef, active !== null);
 
   // While the lightbox is open: close on Escape and lock background scroll.
   useEffect(() => {
@@ -41,6 +49,7 @@ export function Galleries({ galleries }: { galleries: Gallery[] }) {
                   className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
                 >
                   {gallery.link.label} <ExternalLink className="w-4 h-4" />
+                  <span className="sr-only"> (opens in new tab)</span>
                 </a>
               )}
             </div>
@@ -68,39 +77,37 @@ export function Galleries({ galleries }: { galleries: Gallery[] }) {
         </section>
       ))}
 
-      <AnimatePresence>
-        {active && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+      {active && (
+        <motion.div
+          ref={dialogRef}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          onClick={() => setActive(null)}
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 sm:p-10 cursor-zoom-out"
+          role="dialog"
+          aria-modal="true"
+          aria-label={active.alt}
+        >
+          <button
+            ref={closeRef}
+            type="button"
+            aria-label="Close"
             onClick={() => setActive(null)}
-            className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 sm:p-10 cursor-zoom-out"
-            role="dialog"
-            aria-modal="true"
-            aria-label={active.alt}
+            className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
           >
-            <button
-              type="button"
-              aria-label="Close"
-              onClick={() => setActive(null)}
-              className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <motion.img
-              key={active.src}
-              src={active.src}
-              alt={active.alt}
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.92, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 28 }}
-              className="max-w-full max-h-full object-contain shadow-2xl"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <X className="w-5 h-5" />
+          </button>
+          <motion.img
+            key={active.src}
+            src={active.src}
+            alt={active.alt}
+            initial={{ scale: 0.92, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 28 }}
+            className="max-w-full max-h-full object-contain shadow-2xl"
+          />
+        </motion.div>
+      )}
     </>
   );
 }

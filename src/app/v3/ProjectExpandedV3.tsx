@@ -13,6 +13,7 @@ import { Link } from "react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Minimize2 } from "lucide-react";
 import type { Project } from "../data/projects";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import { MOTIFS, type MotifKey } from "./Motifs";
 import { DotCluster } from "./ProjectCardV3";
 import { V3 } from "./tokens";
@@ -90,6 +91,7 @@ export function ProjectExpandedV3({
   const p = item.project;
   const Motif = MOTIFS[item.motif];
   const closeRef = useRef<HTMLButtonElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Direction of the last navigation (+1 next / -1 prev), for the carousel
   // push. A wrap-around jump (first <-> last) inverts the raw delta's sign.
@@ -100,9 +102,9 @@ export function ProjectExpandedV3({
     prevIndex.current = current;
   }, [current]);
 
-  useEffect(() => {
-    closeRef.current?.focus();
-  }, []);
+  // Focus lives inside the dialog while it's open (Tab wraps, initial focus on
+  // the close button) and returns to the triggering card button on close.
+  useFocusTrap(containerRef, closeRef);
 
   // Esc closes, arrow keys navigate; page scroll locked while open.
   useEffect(() => {
@@ -122,13 +124,13 @@ export function ProjectExpandedV3({
 
   return (
     <motion.div
+      ref={containerRef}
       role="dialog"
       aria-modal="true"
       aria-label={`${p.title} — project details`}
       className="fixed inset-0 z-[60] flex items-center justify-center p-4 pb-20 sm:p-8 sm:pb-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
     >
       {/* backdrop */}
@@ -142,12 +144,11 @@ export function ProjectExpandedV3({
           className="relative flex-1 min-w-0 h-full rounded-[8px] border border-[#4D4D4D]/40 bg-[#141414] flex flex-col overflow-hidden"
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.96 }}
           transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
         >
           <div className="flex items-start justify-between p-[22px] pb-0 shrink-0">
             <DotCluster color={V3.orange2} />
-            <span className={`${mono} text-[10px] text-[#4D4D4D] mr-12 mt-1`}>{item.index}</span>
+            <span className={`${mono} text-[10px] text-[#8C8C8C] mr-12 mt-1`}>{item.index}</span>
           </div>
 
           <button
@@ -192,7 +193,7 @@ export function ProjectExpandedV3({
 
                   <div>
                     <h3 className="font-['Space_Grotesk',sans-serif] font-bold text-[25px] sm:text-[31px] leading-[1.15] text-[#F7F7F7]">{p.title}</h3>
-                    <p className={`${mono} text-[9px] text-[#A3A3A3] mt-3`}>
+                    <p className={`${mono} text-[11px] text-[#A3A3A3] mt-3`}>
                       {p.category} · {p.role} · {p.year}
                     </p>
                   </div>
@@ -203,18 +204,18 @@ export function ProjectExpandedV3({
 
                   <div>
                     <MiniLabel>Challenge</MiniLabel>
-                    <p className={`${mono} text-[9px] leading-[1.8] text-[#A3A3A3] mt-2`}>{LOREM_BLOCK}</p>
+                    <p className={`${mono} text-[12px] leading-[1.8] text-[#A3A3A3] mt-2`}>{LOREM_BLOCK}</p>
                   </div>
                   <div>
                     <MiniLabel>Solution</MiniLabel>
-                    <p className={`${mono} text-[9px] leading-[1.8] text-[#A3A3A3] mt-2`}>{LOREM_BLOCK}</p>
+                    <p className={`${mono} text-[12px] leading-[1.8] text-[#A3A3A3] mt-2`}>{LOREM_BLOCK}</p>
                   </div>
 
                   <div>
                     <MiniLabel>Key skills</MiniLabel>
                     <div className="flex flex-wrap gap-2 mt-3">
                       {PLACEHOLDER_SKILLS.map((s) => (
-                        <span key={s} className={`${mono} text-[9px] text-[#F7F7F7] border border-[#4D4D4D]/60 rounded-[4px] px-2.5 py-1.5`}>
+                        <span key={s} className={`${mono} text-[11px] text-[#F7F7F7] border border-[#4D4D4D]/60 rounded-[4px] px-2.5 py-1.5`}>
                           {s}
                         </span>
                       ))}

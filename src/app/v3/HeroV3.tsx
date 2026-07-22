@@ -42,11 +42,11 @@ export function HeroV3() {
           </p>
         </div>
 
-        <p className={`${mono} absolute bottom-4 right-6 text-[9px] text-[#4D4D4D] z-10 normal-case`}>POS 000.0</p>
+        <p className={`${mono} absolute bottom-4 right-6 text-[9px] text-[#8C8C8C] z-10 normal-case`}>POS 000.0</p>
       </section>
 
       {/* section readout, tucked under the plate as in the Figma stage */}
-      <p className={`${mono} text-[9px] text-[#4D4D4D] mt-2 ml-4`}>SEC-00 / Hero</p>
+      <p className={`${mono} text-[9px] text-[#8C8C8C] mt-2 ml-4`}>SEC-00 / Hero</p>
     </div>
   );
 }

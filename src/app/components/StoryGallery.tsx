@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, ArrowLeft, X } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import type { Story } from "../data/projects";
 
 // Slide enter/exit positions for the horizontal "push" transition. Both the
@@ -17,6 +18,12 @@ export function StoryGallery({ story }: { story: Story }) {
   const [open, setOpen] = useState(false);
   // [current index, direction of last move] — direction drives the push.
   const [[index, direction], setPage] = useState<[number, number]>([0, 0]);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  // While open, keyboard focus stays inside the slideshow (starting on the
+  // close button) and returns to the CTA tile on close.
+  useFocusTrap(dialogRef, closeRef, open);
 
   const paginate = useCallback(
     (dir: number) => {
@@ -74,13 +81,13 @@ export function StoryGallery({ story }: { story: Story }) {
         </div>
       </button>
 
-      {/* Full-screen overlay slideshow */}
-      <AnimatePresence>
-        {open && (
+      {/* Full-screen overlay slideshow. Unmounts instantly on close (no exit
+          animation) so it can never linger invisibly over the page. */}
+      {open && (
           <motion.div
+            ref={dialogRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] bg-black flex flex-col"
             role="dialog"
             aria-modal="true"
@@ -92,6 +99,7 @@ export function StoryGallery({ story }: { story: Story }) {
                 {index + 1} / {slides.length}
               </span>
               <button
+                ref={closeRef}
                 type="button"
                 aria-label="Close"
                 onClick={() => setOpen(false)}
@@ -145,8 +153,7 @@ export function StoryGallery({ story }: { story: Story }) {
               </button>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+      )}
     </section>
   );
 }

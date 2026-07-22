@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { projects } from "../data/projects";
 import { HeroV3 } from "../v3/HeroV3";
 import { AboutV3 } from "../v3/AboutV3";
@@ -8,6 +8,7 @@ import { ProjectCardV3, type ProjectCardData } from "../v3/ProjectCardV3";
 import { ProjectExpandedV3, type ExpandedProject } from "../v3/ProjectExpandedV3";
 import { ProcessDiagram, CareerDiagram } from "../v3/Diagrams";
 import { SectionLabel, TickRail } from "../v3/primitives";
+import { usePageTitle } from "../hooks/usePageTitle";
 import type { MotifKey } from "../v3/Motifs";
 
 // Assign a line-art motif + display meta to each project for the V3 flip cards.
@@ -44,6 +45,7 @@ const fade = {
 };
 
 export function Home() {
+  usePageTitle();
   // Index of the project open in the full-screen expanded view, or null.
   const [expanded, setExpanded] = useState<number | null>(null);
   return (
@@ -74,23 +76,25 @@ export function Home() {
           ))}
         </div>
         {/* Portal escapes this motion.section — its transform would otherwise
-            trap the fixed overlay and leave it under the z-50 nav. */}
+            trap the fixed overlay and leave it under the z-50 nav.
+            No AnimatePresence here on purpose: closing must unmount the
+            full-screen overlay immediately. Waiting on an exit animation can
+            leave it stuck invisible over the page (blocking all clicks) if the
+            tab is backgrounded mid-close and rAF callbacks stop firing. */}
         {createPortal(
-          <AnimatePresence>
-            {expanded !== null && (
-              <ProjectExpandedV3
-                items={expandedItems}
-                current={expanded}
-                onClose={() => setExpanded(null)}
-                onNavigate={setExpanded}
-              />
-            )}
-          </AnimatePresence>,
+          expanded !== null && (
+            <ProjectExpandedV3
+              items={expandedItems}
+              current={expanded}
+              onClose={() => setExpanded(null)}
+              onNavigate={setExpanded}
+            />
+          ),
           document.body
         )}
-        <a href="#work" className="inline-block font-['Space_Mono',monospace] text-[13px] font-bold uppercase tracking-[0.05em] text-[#FE6219] hover:text-[#F36A36] transition-colors mt-8">
-          View all work →
-        </a>
+        {/* "View all work" link removed until the Work index page exists —
+            it previously pointed at this very section (confusing, and flagged
+            in the accessibility audit). Reinstate with the real route. */}
       </motion.section>
 
       <TickRail />

@@ -41,7 +41,7 @@ export function ProcessDiagram() {
           </div>
         ))}
       </div>
-      <p className={`${mono} text-[8px] text-[#4D4D4D] mt-4`}>Placeholder — process diagram v0</p>
+      <p className={`${mono} text-[8px] text-[#8C8C8C] mt-4`}>Placeholder — process diagram v0</p>
     </div>
   );
 }
@@ -81,7 +81,7 @@ export function CareerDiagram() {
           </div>
         ))}
       </div>
-      <p className={`${mono} text-[8px] text-[#4D4D4D] mt-4`}>Placeholder — career timeline v0</p>
+      <p className={`${mono} text-[8px] text-[#8C8C8C] mt-4`}>Placeholder — career timeline v0</p>
     </div>
   );
 }

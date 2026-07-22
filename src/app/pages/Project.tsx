@@ -6,6 +6,7 @@ import { ArrowLeft, ExternalLink, Calendar, User } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Galleries } from "../components/Galleries";
 import { StoryGallery } from "../components/StoryGallery";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 // Section heading used across the case-study sections (Outfit, large + bold).
 function SectionHeading({ children }: { children: React.ReactNode }) {
@@ -54,6 +55,7 @@ function NumberedCard({
 export function Project() {
   const { slug } = useParams();
   const project = projects.find((p) => p.slug === slug);
+  usePageTitle(project ? project.title : "Project not found");
 
   if (!project) {
     return (
@@ -109,6 +111,7 @@ export function Project() {
                 className="mt-8 sm:mt-auto self-end inline-flex items-center justify-center gap-2 py-4 px-6 rounded-full bg-white text-black font-medium hover:bg-zinc-200 transition-colors"
               >
                 {project.liveLabel ?? "Visit Live Site"} <ExternalLink className="w-4 h-4" />
+                <span className="sr-only"> (opens in new tab)</span>
               </a>
             )}
           </div>

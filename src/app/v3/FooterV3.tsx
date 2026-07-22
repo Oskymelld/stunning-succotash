@@ -21,7 +21,12 @@ function TickScale() {
 const mono = "font-['Space_Mono',monospace] tracking-[0.05em] uppercase";
 
 export function FooterV3() {
-  const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const scrollTop = () =>
+    window.scrollTo({
+      top: 0,
+      // Jump instantly for users who prefer reduced motion
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
   return (
     <footer className="w-full bg-[#0D0D0D] mt-24 sm:pl-[104px]">
       <div className="max-w-[1200px] mx-auto px-6 sm:px-10 pt-8 pb-8">
@@ -39,7 +44,7 @@ export function FooterV3() {
 
           {/* Index */}
           <div>
-            <p className={`${mono} text-[10px] text-[#4D4D4D] mb-3`}>\\ Index</p>
+            <p className={`${mono} text-[10px] text-[#8C8C8C] mb-3`}>\\ Index</p>
             <ul className="flex flex-col gap-2.5">
               {[
                 { label: "Home", to: "/" },
@@ -58,10 +63,10 @@ export function FooterV3() {
 
           {/* Contact */}
           <div>
-            <p className={`${mono} text-[10px] text-[#4D4D4D] mb-3`}>\\ Contact</p>
+            <p className={`${mono} text-[10px] text-[#8C8C8C] mb-3`}>\\ Contact</p>
             <ul className="flex flex-col gap-2.5">
               <li><a href="mailto:Tomcarter90@gmail.com" className={`${mono} text-[11px] text-[#A3A3A3] hover:text-[#F7F7F7] hover:underline transition-colors`}>Email ↗</a></li>
-              <li><a href="https://www.linkedin.com/in/tom-carter-89403267/" target="_blank" rel="noopener noreferrer" className={`${mono} text-[11px] text-[#A3A3A3] hover:text-[#F7F7F7] hover:underline transition-colors`}>LinkedIn ↗</a></li>
+              <li><a href="https://www.linkedin.com/in/tom-carter-89403267/" target="_blank" rel="noopener noreferrer" className={`${mono} text-[11px] text-[#A3A3A3] hover:text-[#F7F7F7] hover:underline transition-colors`}>LinkedIn ↗<span className="sr-only"> (opens in new tab)</span></a></li>
             </ul>
           </div>
 
@@ -76,8 +81,8 @@ export function FooterV3() {
         </div>
 
         <div className="flex justify-between items-center mt-10 pt-4 border-t border-[#4D4D4D]/40">
-          <p className={`${mono} text-[9px] text-[#4D4D4D]`}>© 2026 Tom Carter. All rights reserved.</p>
-          <p className={`${mono} text-[9px] text-[#4D4D4D]`}>SEC-06 / Footer</p>
+          <p className={`${mono} text-[10px] text-[#8C8C8C]`}>© 2026 Tom Carter. All rights reserved.</p>
+          <p className={`${mono} text-[9px] text-[#8C8C8C]`}>SEC-06 / Footer</p>
         </div>
       </div>
     </footer>

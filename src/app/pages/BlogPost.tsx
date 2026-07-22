@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { getPostBySlug, formatDate } from "../data/blog";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 // Maps each Markdown element to a styled component so the post body matches
 // the site's design. Edit these classes to restyle all posts at once.
@@ -49,6 +50,7 @@ const markdownComponents = {
 export function BlogPost() {
   const { slug } = useParams();
   const post = getPostBySlug(slug ?? "");
+  usePageTitle(post ? post.title : "Post not found");
 
   if (!post) {
     return (
@@ -77,7 +79,8 @@ export function BlogPost() {
         <span className="font-medium">Back to Writing</span>
       </Link>
 
-      <div className="flex items-center gap-2 text-sm text-zinc-500 mb-4">
+      {/* zinc-400: zinc-500 fails contrast at 3.8:1 on the dark bg */}
+      <div className="flex items-center gap-2 text-sm text-zinc-400 mb-4">
         <Calendar className="w-4 h-4" />
         <span>{formatDate(post.date)}</span>
       </div>

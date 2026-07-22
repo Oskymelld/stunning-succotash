@@ -20,9 +20,9 @@ type Item = {
 
 const ITEMS: Item[] = [
   { key: "home", label: "Home", icon: Home, to: "/" },
-  { key: "work", label: "Work", icon: Briefcase, hash: "#work" },
+  { key: "work", label: "Work", icon: Briefcase, hash: "/#work" },
   { key: "writing", label: "Writing", icon: PenLine, to: "/blog" },
-  { key: "about", label: "About Me", icon: User, hash: "#about" },
+  { key: "about", label: "About Me", icon: User, hash: "/#about" },
   { key: "contact", label: "Contact", icon: Mail, href: "mailto:Tomcarter90@gmail.com" },
 ];
 
@@ -32,27 +32,31 @@ function ItemInner({ item, active }: { item: Item; active: boolean }) {
     "group/nav flex items-center rounded-[6px] border transition-all duration-300 overflow-hidden " +
     "sm:flex-row flex-col";
   // Active page = orange outline (like the TC tile), white icon. Others sit
-  // grey. Hovering an item fills it solid orange, everything white.
+  // grey. Hovering (or keyboard-focusing) an item fills it solid orange with
+  // DARK icon + label: white on orange is 2.8:1 and fails WCAG AA, dark is 6.1:1.
   const state = active
     ? "border-[#FE6219] text-[#F7F7F7]"
     : "border-transparent text-[#A3A3A3]";
-  const hover = "hover:bg-[#FE6219] hover:border-[#FE6219] hover:text-[#F7F7F7]";
+  const hover =
+    "hover:bg-[#FE6219] hover:border-[#FE6219] hover:text-[#141414] " +
+    "group-focus-visible/item:bg-[#FE6219] group-focus-visible/item:border-[#FE6219] group-focus-visible/item:text-[#141414]";
   return (
     <span className={`${base} ${state} ${hover}`}>
       <span className="w-11 h-10 flex items-center justify-center shrink-0">
         <Icon className="w-5 h-5" strokeWidth={1.5} />
       </span>
-      {/* Desktop: hovering anywhere on the rail slides out EVERY label */}
-      <span className="hidden sm:block font-['Space_Mono',monospace] font-bold text-[11px] tracking-[0.05em] uppercase whitespace-nowrap text-[#F7F7F7] transition-all duration-300 max-w-0 opacity-0 group-hover/rail:max-w-[120px] group-hover/rail:opacity-100 group-hover/rail:pr-3">
+      {/* Desktop: hovering anywhere on the rail, or tabbing into it, slides
+          out EVERY label. Dark text when this item's orange fill is showing. */}
+      <span className="hidden sm:block font-['Space_Mono',monospace] font-bold text-[11px] tracking-[0.05em] uppercase whitespace-nowrap text-[#F7F7F7] group-hover/nav:text-[#141414] group-focus-visible/item:text-[#141414] transition-all duration-300 max-w-0 opacity-0 group-hover/rail:max-w-[120px] group-hover/rail:opacity-100 group-hover/rail:pr-3 group-focus-within/rail:max-w-[120px] group-focus-within/rail:opacity-100 group-focus-within/rail:pr-3">
         {item.label}
       </span>
-      {/* Mobile: label drops beneath the hovered icon */}
+      {/* Mobile: label drops beneath the hovered or focused icon */}
       <span
         className={
-          "sm:hidden font-['Space_Mono',monospace] font-bold text-[9px] tracking-[0.05em] uppercase whitespace-nowrap text-[#F7F7F7] transition-all duration-300 " +
+          "sm:hidden font-['Space_Mono',monospace] font-bold text-[10px] tracking-[0.05em] uppercase whitespace-nowrap text-[#F7F7F7] group-hover/nav:text-[#141414] group-focus-visible/item:text-[#141414] transition-all duration-300 " +
           (active
             ? "max-h-[16px] opacity-100 pb-1.5 px-2"
-            : "max-h-0 opacity-0 group-hover/nav:max-h-[16px] group-hover/nav:opacity-100 group-hover/nav:pb-1.5 group-hover/nav:px-2")
+            : "max-h-0 opacity-0 group-hover/nav:max-h-[16px] group-hover/nav:opacity-100 group-hover/nav:pb-1.5 group-hover/nav:px-2 group-focus/item:max-h-[16px] group-focus/item:opacity-100 group-focus/item:pb-1.5 group-focus/item:px-2")
         }
       >
         {item.label}
@@ -88,9 +92,11 @@ export function NavV3() {
 
         {ITEMS.map((item) => {
           const inner = <ItemInner item={item} active={isActive(item)} />;
-          if (item.to) return <Link key={item.key} to={item.to} className="w-max">{inner}</Link>;
-          if (item.hash) return <a key={item.key} href={item.hash} className="w-max">{inner}</a>;
-          return <a key={item.key} href={item.href} className="w-max">{inner}</a>;
+          // group/item lets ItemInner react to keyboard focus on this link
+          const cls = "w-max group/item";
+          if (item.to) return <Link key={item.key} to={item.to} className={cls}>{inner}</Link>;
+          if (item.hash) return <a key={item.key} href={item.hash} className={cls}>{inner}</a>;
+          return <a key={item.key} href={item.href} className={cls}>{inner}</a>;
         })}
       </nav>
     </header>

@@ -2,8 +2,10 @@ import { Link } from "react-router";
 import { motion } from "motion/react";
 import { ArrowUpRight, Calendar } from "lucide-react";
 import { getAllPosts, formatDate } from "../data/blog";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export function Blog() {
+  usePageTitle("Writing");
   const posts = getAllPosts();
 
   return (
@@ -54,7 +56,8 @@ export function Blog() {
                 )}
 
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 text-sm text-zinc-500 mb-3">
+                  {/* zinc-400: zinc-500 fails contrast at 3.8:1 on the dark bg */}
+                  <div className="flex items-center gap-2 text-sm text-zinc-400 mb-3">
                     <Calendar className="w-4 h-4" />
                     <span>{formatDate(post.date)}</span>
                   </div>
