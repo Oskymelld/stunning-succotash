@@ -39,7 +39,7 @@ export function Galleries({ galleries }: { galleries: Gallery[] }) {
           {(gallery.label || gallery.link) && (
             <div className="flex items-center justify-between mb-6">
               {gallery.label && (
-                <h3 className="text-xl font-bold font-['Outfit',sans-serif] text-zinc-300">{gallery.label}</h3>
+                <h3 className="font-['Space_Mono',monospace] text-[13px] font-bold uppercase tracking-[0.05em] text-[#A3A3A3]">{gallery.label}</h3>
               )}
               {gallery.link && (
                 <a

@@ -54,7 +54,7 @@ export function StoryGallery({ story }: { story: Story }) {
   return (
     <section className="my-16">
       {story.label && (
-        <h3 className="text-xl font-bold font-['Outfit',sans-serif] text-zinc-300 mb-6">{story.label}</h3>
+        <h3 className="font-['Space_Mono',monospace] text-[13px] font-bold uppercase tracking-[0.05em] text-[#A3A3A3] mb-6">{story.label}</h3>
       )}
 
       {/* CTA tile — opens the full-screen slideshow */}
@@ -77,7 +77,7 @@ export function StoryGallery({ story }: { story: Story }) {
           <span className="w-12 h-12 shrink-0 rounded-full bg-white/10 border border-white/20 flex items-center justify-center group-hover:bg-[#ff6d1f] transition-colors">
             <ArrowRight className="w-5 h-5 text-white transition-transform group-hover:translate-x-0.5" />
           </span>
-          <span className="text-lg font-medium text-white font-['Outfit',sans-serif]">See the story</span>
+          <span className="font-['Space_Grotesk',sans-serif] text-lg font-medium text-[#F7F7F7]">See the story</span>
         </div>
       </button>
 
