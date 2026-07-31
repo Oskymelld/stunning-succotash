@@ -15,10 +15,11 @@ import reboHifi03 from "../../imports/rebo/hifi-03.png";
 import reboHifi04 from "../../imports/rebo/hifi-04.png";
 import reboHifi05 from "../../imports/rebo/hifi-05.png";
 
-// Everbound Goods case study assets (founder-built leather goods brand).
-// TODO: replace these placeholder imports with real Everbound product photos.
-// Drop images into src/imports/everbound/ and update the paths below.
-import everboundHero from "../../imports/A_square_image_of_a_.png"; // PLACEHOLDER hero
+// Everbound Goods case study assets — real product/workshop photos, resized
+// and EXIF/GPS-stripped (same treatment as the About page maker shots).
+import everboundHero from "../../imports/everbound/hero.jpg";
+import everboundStraps from "../../imports/everbound/straps.jpg";
+import everboundBench from "../../imports/everbound/bench.jpg";
 
 // Neon Cloud case study assets (financial-skills web + mobile app).
 import ncDevices from "../../imports/neon-cloud/devices.png";
@@ -124,6 +125,10 @@ export interface Project {
   // Key skills used on the project — shown as "\ KEY SKILLS" tags in the
   // expanded card view on the home page. Falls back to `deliverables`.
   skills?: string[];
+  // True once Tom has written and approved the real copy for this project.
+  // The home-page card and expanded view show lorem placeholders until this is
+  // set, so unwritten projects never publish draft or invented text.
+  copyReady?: boolean;
   liveUrl?: string;
   liveLabel?: string;
   // Rich case-study sections below the summary (optional).
@@ -344,88 +349,116 @@ export const projects: Project[] = [
     sections: ["summary", "overview", "story", "finalState", "keyLearnings"],
   },
   {
+    // Copy sourced from Drafts/Everbound Goods Case Study.md (Draft 1) and the
+    // Everbound knowledge docs. Two things are still open there: the
+    // "what I'd do differently" reflection, and hard numbers for the outcome.
     slug: "everbound-goods",
     title: "Everbound Goods",
     category: "Brand & Product • Founder",
     color: "#8B5E3C", // Saddle brown — vegetable-tanned leather
     image: everboundHero,
     description:
-      "Founding and building Everbound Goods — a handmade leather goods brand from Bristol — after a decade designing consumer electronics. Brand, product and craft, end to end.",
-    role: "Founder, Maker & Designer",
-    year: "2024 – Present", // TODO: confirm the year you started Everbound
+      "Twelve years designing machines for millions of people. Now I make one thing at a time, by hand — a Bristol leather goods brand run with my wife Lucy.",
+    role: "Founder · Design & patterns · Maker",
+    year: "2025 – Present",
     challenge:
-      "After more than a decade designing consumer electronics, I'd grown disconnected from the disposability of the industry — products built to be replaced, not kept. I wanted to return to making physical things with soul: objects that age with grace, carry stories, and look after their owner.",
+      "My career had moved further and further into the digital world, and I missed making things with my hands. The market had the same gap: leather goods split into fast and cheap, or slow and expensive. Very little in between was made properly, from honest materials, at a price a normal person could justify.",
     solution:
-      "Everbound Goods — a handmade leather goods brand built on quiet luxury without excess and sustainability without compromise. Every belt, wallet and key holder is stitched, assembled and finished by hand in Bristol, using vegetable-tanned leather sourced exclusively from British tanneries.",
+      "Everbound Goods — belts, wallets, key holders, glasses cases and bags, made entirely by hand from veg tan full grain leather. One foot in modern product engineering, one eye on heritage craft: attainable and sustainable pieces built to last a lifetime.",
     deliverables: [
-      "Brand Identity",
-      "Product Design",
+      "Brand & Identity",
+      "Product Design & Patterns",
       "Leathercraft",
-      "E-commerce (Shopify)",
+      "Website & E-commerce",
       "Photography & Content",
     ],
-    // DRAFT skills — refine with the real ones for this project.
-    skills: ["Brand Identity", "Product Design", "Leathercraft", "Tooling Design", "Photography", "E-commerce"],
+    skills: [
+      "Product Design",
+      "Leathercraft",
+      "Tooling & Jigs",
+      "Photogrammetry",
+      "Brand Building",
+      "Photography",
+    ],
     liveUrl: "https://everboundgoods.com",
     liveLabel: "Visit everboundgoods.com",
-    sections: ["summary", "overview", "approach", "finalState", "keyLearnings"],
+    copyReady: true,
+    sections: ["summary", "overview", "galleries", "approach", "finalState", "keyLearnings"],
     caseStudy: {
       overview:
-        "Everbound Goods is the business I founded to bring craftsmanship back into my work. After years designing consumer electronics — fast cycles, hidden materials, products designed to be replaced — I missed the tactile, enduring nature of physical things. Everbound is the answer to that: a small leather goods brand where I control the whole stack, from sourcing the hide to stitching the final piece to building the store it sells in. It's a case study in starting something from nothing — defining a point of view, building it by hand, and bringing it to market.",
-      // Brand-building phases, framed like a design process.
+        "I spent over a decade at Dyson designing consumer electronics, and somewhere along the way I'd drifted from being a hands-on maker into managing people — which didn't suit me. Leatherwork started as an evening class at the Folk House in Bristol, a way of getting back to making things. Three years later, a redundancy and a two-day course on running a creative business turned the hobby into a company. Everbound Goods is run with my wife Lucy: I take design, patterns, the more complex builds and the website; Lucy runs social, admin, marketing and outreach.",
+      galleries: [
+        {
+          label: "From the workshop",
+          link: { label: "Visit everboundgoods.com", url: "https://everboundgoods.com" },
+          images: [
+            { src: everboundHero, alt: "Three finished Everbound belts with solid brass buckles and the debossed EG maker's mark" },
+            { src: everboundStraps, alt: "Two hand-stitched belt straps on a cutting mat, one showing the debossed EG logo" },
+            { src: everboundBench, alt: "The workbench: pricking irons, edge beveller, awl, thread and offcuts of veg tan leather on a cutting mat" },
+          ],
+        },
+      ],
       approach: [
         {
-          title: "Define the why",
-          body: "Everything starts from a clear philosophy: quiet luxury without excess, sustainable without compromise. True quality lies not only in what you see, but in the thought, skill and honesty stitched into every detail. That belief shaped every decision that followed.",
+          title: "Learn the business, not just the craft",
+          body: "The push came from redundancy at Dyson, and the timing happened to coincide with a two-day course on running a creative business at Bayes Business School. Between job hunting and that course, I finally had the time (and the nudge) to attempt something I'd been quietly terrified of for years.",
         },
         {
-          title: "Source with integrity",
-          body: "Leather is hand-selected and sourced exclusively from British tanneries — vegetable-tanned using natural tannins, a byproduct of the meat industry that's biodegradable and traceable. The materials are exactly what they appear to be: no hidden layers, no deceptive finishes. A scuff should tell a story, not reveal a shortcut.",
+          title: "Use markets as research",
+          body: "Most of our sales still come from craft markets around Bristol, and they've turned out to be the best research instrument we have. You watch which pieces people pick up first, which questions come up every time, and which price points make someone pause. It's the closest thing to contextual enquiry you can get while also taking payment. The thing that surprised me most: how many people ask where the leather comes from.",
         },
         {
-          title: "Make by hand",
-          body: "Every piece is stitched, assembled and finished by hand in the Bristol workshop, using traditional techniques adapted for modern life. Nothing leaves until it's checked and right — pieces built to deepen in character over a lifetime of adventure, not crack, flake or fall apart.",
+          title: "Decide the material principles up front",
+          body: "Veg tan full grain leather, tanned the way hides have been preserved for centuries. Solid honest hardware with no fake coatings. Ritza thread, designed for hand stitching. Veg tan is a byproduct of the meat industry, biodegradable, and it ages rather than degrades — the sustainability argument and the aesthetic argument at the same time.",
         },
         {
-          title: "Build the brand",
-          body: "From the name and identity through to product photography and the Shopify storefront, I built the brand around the craft — designing a buying experience that feels as considered and honest as the goods themselves.",
+          title: "Bring the engineering to the bench",
+          body: "This is where the day job earns its keep. I use image photogrammetry to map each hide and maximise yield, and 3D printing to produce dies, tools and jigs that make production more efficient without making it less handmade. We deliberately buy leather with defects and marks that larger manufacturers can't use, then work around the damage — better economics and considerably less waste, from the same decision.",
         },
       ],
       finalState: {
         image: everboundHero,
-        alt: "Everbound Goods handmade leather product", // TODO: real product hero
+        alt: "Three finished Everbound belts with solid brass buckles and the debossed EG maker's mark",
         items: [
           {
             title: "A real product line",
-            body: "Belts, wallets, key holders and glasses cases — including the Tuscany, Holstein and Saddle Brown collections — handcrafted and sold direct.",
+            body: "Three collections in production: Holstein 001 in jet black from Thomas Ware & Sons in Bristol, Saddle Brown 002 in natural tan from A&A Crack & Sons in Northampton, and the Tuscany Belt Collection in Italian veg tan.",
           },
           {
-            title: "A traceable supply chain",
-            body: "Every hide is hand-selected from British tanneries, with the story respected from the animal the hide came from to the point it reaches the customer's hands.",
+            title: "Made entirely by hand",
+            body: "Every piece is shaped, stitched and finished by hand — no sewing machines anywhere in the process. It's slower, and that's the point: time spent where it has the most value.",
           },
           {
-            title: "Built to last a lifetime",
-            body: "Pieces designed to age with grace and stand the test of time — the opposite of the disposable cycles I came from.",
+            title: "Running alongside two full-time jobs",
+            body: "Roughly four to six hours a week from me and two to four from Lucy, rising sharply before a market. Markets are the bulk of sales today; growing the website so we rely on them less is the current priority.",
           },
         ],
       },
       keyLearnings: [
         {
-          title: "Owning the whole stack is the hardest and best part",
-          body: "Doing everything — sourcing, making, branding, selling — is relentless, but it's also where the integrity comes from. Nothing is outsourced to a place where corners could be cut.",
+          title: "Starting before I felt ready was the thing that worked",
+          body: "I'd been terrified of trying this for years. What finally worked wasn't more confidence — it was a deadline and a dining room table, which is where the first batch was made.",
         },
         {
-          title: "Constraints from values make better decisions",
-          body: "Committing to British-only sourcing and honest materials narrowed my options — and made every choice clearer and easier to stand behind.",
-          bullets: [
-            "Sustainability stopped being a marketing line and became a sourcing rule",
-            "A clear philosophy removed second-guessing on design and product calls",
-          ],
+          title: "The job turned out to be much bigger than the craft",
+          body: "I quickly realised it now included videographer, photographer, SEO and marketing, data analytics, front-end web developer and IT department. The making is the part I trained for; almost none of the rest of it was.",
         },
         {
-          title: "Design thinking transfers to business building",
-          body: "A decade of product design gave me the toolkit — research, prototyping, iteration, attention to detail — to build a brand. The medium changed from screens to leather; the process didn't.",
+          title: "Bespoke work is where the two careers meet",
+          body: "I'm building that capability using human-centred design principles from my service design day job and ideas from Will Guidara's Unreasonable Hospitality — the argument that the memorable part of a service is rarely the product itself, but the attention paid around it. For a commission, the conversation, the updates and the handover matter as much as the stitching.",
         },
+        {
+          title: "Putting a face to the maker is worth more than any feature",
+          body: "Someone holding one of our pieces knows exactly who made it — which is precisely the thing that got squeezed out of the work I used to do.",
+        },
+      ],
+      knowledgeGained: [
+        "Veg tan leatherwork",
+        "Pattern cutting",
+        "Photogrammetry for yield",
+        "3D-printed tooling",
+        "Running a small business",
+        "Product photography",
       ],
     },
   },

@@ -38,7 +38,7 @@ export function HeroV3() {
             Hello! <span className="text-[#FE6219]">Welcome.</span>
           </h1>
           <p className={`${mono} text-[12px] font-bold text-[#A3A3A3] mt-4`}>
-            \\ Portfolio of Tom Carter — Design Engineer
+            \\ Portfolio of Tom Carter — Product | Service | UX | Engineer
           </p>
         </div>
 

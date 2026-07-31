@@ -28,6 +28,8 @@ const cards: ProjectCardData[] = projects.map((p, i) => ({
   meta: p.category,
   motif: MOTIF_BY_SLUG[p.slug] ?? "cube",
   image: p.image,
+  // Only projects with written copy show it; the rest keep the placeholder.
+  description: p.copyReady ? p.description : undefined,
 }));
 
 // Same projects, richer data for the full-screen expanded view.

@@ -28,10 +28,17 @@ export type ProjectCardData = {
   meta: string; // "DYSON / 2019–21"
   motif: MotifKey;
   image: string;
+  // Real one-liner, passed only for projects whose copy Tom has written
+  // (see `copyReady` in data/projects.ts). Others keep the lorem placeholder
+  // rather than publishing draft text.
+  description?: string;
 };
+
+const LOREM_LINE = "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do.";
 
 export function ProjectCardV3({ data, onExpand }: { data: ProjectCardData; onExpand?: () => void }) {
   const Motif = MOTIFS[data.motif];
+  const blurb = data.description ?? LOREM_LINE;
   return (
     <div className="group/card relative h-[420px]">
     <Link to={`/project/${data.slug}`} className="block [perspective:1200px] h-full" aria-label={`${data.title} — read case study`}>
@@ -47,7 +54,7 @@ export function ProjectCardV3({ data, onExpand }: { data: ProjectCardData; onExp
             <Motif className="w-[176px] h-[176px]" />
           </div>
           <h3 className="font-['Space_Grotesk',sans-serif] font-bold text-[18px] text-[#F7F7F7]">{data.title}</h3>
-          <p className={`${mono} text-[11px] leading-[1.7] text-[#A3A3A3] mt-3`}>Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do.</p>
+          <p className={`${mono} text-[11px] leading-[1.7] text-[#A3A3A3] mt-3 line-clamp-3`}>{blurb}</p>
           <p className={`${mono} text-[11px] text-[#8C8C8C] mt-3`}>{data.meta}</p>
           <span className={`${mono} text-[10px] text-[#F7F7F7] font-bold border border-[#4D4D4D]/60 rounded-[4px] px-3.5 py-2 mt-3 w-max`}>Read case study</span>
         </div>
@@ -71,7 +78,7 @@ export function ProjectCardV3({ data, onExpand }: { data: ProjectCardData; onExp
             </svg>
           </div>
           <h3 className="font-['Space_Grotesk',sans-serif] font-bold text-[18px] text-[#141414]">{data.title}</h3>
-          <p className={`${mono} text-[11px] leading-[1.7] text-[#141414] mt-3`}>Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do.</p>
+          <p className={`${mono} text-[11px] leading-[1.7] text-[#141414] mt-3 line-clamp-3`}>{blurb}</p>
           <p className={`${mono} text-[11px] text-[#141414] mt-3`}>{data.meta}</p>
           <span className={`${mono} text-[10px] text-[#141414] font-bold border border-[#141414] rounded-[4px] px-3.5 py-2 mt-3 w-max`}>Read case study</span>
         </div>

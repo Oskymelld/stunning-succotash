@@ -5,9 +5,9 @@
 // either side of the panel (below it on mobile) and step through projects,
 // wrapping at the ends; the content pushes through horizontally like a
 // carousel (next slides in from the right, prev from the left).
-// Detail copy + skills are PLACEHOLDER lorem for now (same as the small
-// cards) — swap back to p.description / p.challenge / p.solution / p.skills
-// when Tom writes the real copy.
+// Detail copy + skills come from the project data once its `copyReady` flag is
+// set; projects still awaiting real copy fall back to the lorem placeholders
+// below (same as the small cards).
 import { useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { AnimatePresence, motion } from "motion/react";
@@ -198,23 +198,30 @@ export function ProjectExpandedV3({
                     </p>
                   </div>
 
-                  {/* PLACEHOLDER copy — swap to p.description / p.challenge /
-                      p.solution / p.skills when the real text is written. */}
-                  <p className="font-['Space_Grotesk',sans-serif] text-[15px] leading-[1.6] text-[#A3A3A3]">{LOREM_BODY}</p>
+                  {/* Real copy for projects Tom has written up (copyReady);
+                      lorem placeholders for the rest, so draft or unwritten
+                      text never reaches the live site. */}
+                  <p className="font-['Space_Grotesk',sans-serif] text-[15px] leading-[1.6] text-[#A3A3A3]">
+                    {p.copyReady ? p.description : LOREM_BODY}
+                  </p>
 
                   <div>
                     <MiniLabel>Challenge</MiniLabel>
-                    <p className={`${mono} text-[12px] leading-[1.8] text-[#A3A3A3] mt-2`}>{LOREM_BLOCK}</p>
+                    <p className={`${mono} text-[12px] leading-[1.8] text-[#A3A3A3] mt-2`}>
+                      {p.copyReady && p.challenge ? p.challenge : LOREM_BLOCK}
+                    </p>
                   </div>
                   <div>
                     <MiniLabel>Solution</MiniLabel>
-                    <p className={`${mono} text-[12px] leading-[1.8] text-[#A3A3A3] mt-2`}>{LOREM_BLOCK}</p>
+                    <p className={`${mono} text-[12px] leading-[1.8] text-[#A3A3A3] mt-2`}>
+                      {p.copyReady && p.solution ? p.solution : LOREM_BLOCK}
+                    </p>
                   </div>
 
                   <div>
                     <MiniLabel>Key skills</MiniLabel>
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {PLACEHOLDER_SKILLS.map((s) => (
+                      {(p.copyReady && p.skills?.length ? p.skills : PLACEHOLDER_SKILLS).map((s) => (
                         <span key={s} className={`${mono} text-[11px] text-[#F7F7F7] border border-[#4D4D4D]/60 rounded-[4px] px-2.5 py-1.5`}>
                           {s}
                         </span>
