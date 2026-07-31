@@ -1,275 +1,259 @@
+// Case-study page — built to the V3 Figma template
+// "CASE STUDY / DYSON MICRO 1.5KG — EXAMPLE (OPT B) — 1440" (node 129:927).
+// Structure: header (title + hook + fact box + tags) → bracketed hero → the
+// Context/Problem/Approach/Outcome/Reflection arc with alternating imagery →
+// quote, figures and stats readout → prev/next project.
+//
+// Projects that define `caseStudy.narrative` drive this directly. Older
+// projects (Rebo, Neon Cloud) are mapped onto the same arc by deriveNarrative
+// below, so every case study renders in one visual language.
 import { useParams, Link } from "react-router";
 import { motion } from "motion/react";
-import { projects, DEFAULT_DELIVERABLES, DEFAULT_SECTION_ORDER } from "../data/projects";
-import type { FeatureItem, KeyLearning, SectionKey } from "../data/projects";
-import { ArrowLeft, ExternalLink, Calendar, User } from "lucide-react";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
+import { projects } from "../data/projects";
+import type { NarrativeSection, Project as ProjectType } from "../data/projects";
 import { Galleries } from "../components/Galleries";
 import { StoryGallery } from "../components/StoryGallery";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { TickRail } from "../v3/primitives";
+import {
+  CornerBrackets,
+  FactBox,
+  ImageBlock,
+  QuoteReference,
+  SectionHeader,
+  StatsReadout,
+  Tag,
+} from "../v3/CaseStudyV3";
 
-// Section heading used across the case-study sections (Outfit, large + bold).
-function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="text-3xl sm:text-4xl font-bold font-['Outfit',sans-serif] text-white mb-8">
-      {children}
-    </h2>
-  );
-}
+const mono = "font-['Space_Mono',monospace] tracking-[0.05em] uppercase";
 
-// A numbered card (badge + title + body) shared by the Approach, Final State,
-// and Key Learnings sections. `variant` tweaks the colour treatment.
-function NumberedCard({
-  index,
-  item,
-  bullets,
-  variant = "approach",
-}: {
-  index: number;
-  item: FeatureItem;
-  bullets?: string[];
-  variant?: "approach" | "learning";
-}) {
-  const bg = variant === "learning" ? "bg-[#111]" : "bg-[rgba(7,110,116,0.1)]";
-  const titleColor = variant === "learning" ? "text-white" : "text-[#c75a20]";
-  return (
-    <div className={`${bg} border border-white/10 rounded-[24px] p-8 sm:p-10 flex flex-col gap-4 h-full`}>
-      <div className="flex items-center gap-3">
-        <span className="size-8 shrink-0 rounded-[16px] bg-[#1f1f1f] border border-white/10 flex items-center justify-center text-sm font-bold text-white">
-          {index}
-        </span>
-        <h3 className={`text-xl font-bold ${titleColor}`}>{item.title}</h3>
-      </div>
-      {item.body && <p className="text-[#a1a1aa] text-base leading-relaxed">{item.body}</p>}
-      {bullets && bullets.length > 0 && (
-        <ul className="list-disc pl-6 text-[#a1a1aa] text-base leading-relaxed space-y-1">
-          {bullets.map((b) => (
-            <li key={b}>{b}</li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+// Build the five-beat arc for projects written before the V3 template existed,
+// so they still render in the new theme instead of falling back to the old one.
+function deriveNarrative(p: ProjectType): NarrativeSection[] {
+  const cs = p.caseStudy;
+  const out: NarrativeSection[] = [];
+  if (cs?.overview) out.push({ code: "CONTEXT", heading: "Context", body: cs.overview });
+  if (p.challenge) out.push({ code: "PROBLEM", heading: "Problem", body: p.challenge });
+  if (cs?.approach?.length) {
+    out.push({
+      code: "APPROACH",
+      heading: "Approach",
+      body: cs.approach.map((a) => `${a.title}. ${a.body}`).join(" "),
+    });
+  }
+  if (p.solution) {
+    out.push({
+      code: "OUTCOME",
+      heading: "Outcome",
+      body: [p.solution, ...(cs?.finalState?.items ?? []).map((i) => `${i.title}. ${i.body}`)].join(" "),
+      image: cs?.finalState?.image,
+      imageAlt: cs?.finalState?.alt,
+    });
+  }
+  if (cs?.keyLearnings?.length) {
+    out.push({
+      code: "REFLECTION",
+      heading: "Reflection",
+      body: cs.keyLearnings
+        .map((k) => [k.title, k.body, ...(k.bullets ?? [])].filter(Boolean).join(". "))
+        .join(" "),
+    });
+  }
+  return out;
 }
 
 export function Project() {
   const { slug } = useParams();
-  const project = projects.find((p) => p.slug === slug);
+  const index = projects.findIndex((p) => p.slug === slug);
+  const project = index === -1 ? undefined : projects[index];
   usePageTitle(project ? project.title : "Project not found");
 
   if (!project) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <h1 className="text-3xl font-bold mb-4 font-['Outfit']">Project Not Found</h1>
-        <Link to="/" className="text-zinc-400 hover:text-white flex items-center gap-2">
-          <ArrowLeft className="w-4 h-4" /> Back to Home
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6">
+        <h1 className="font-['Space_Grotesk',sans-serif] text-[31px] font-bold text-[#F7F7F7]">
+          Project not found
+        </h1>
+        <Link to="/#work" className={`${mono} text-[13px] font-bold text-[#FE6219] hover:underline`}>
+          ← Back to work
         </Link>
       </div>
     );
   }
 
   const cs = project.caseStudy;
-  const deliverables = project.deliverables ?? DEFAULT_DELIVERABLES;
-  const hasSummary = Boolean(project.challenge || project.solution);
+  const narrative = cs?.narrative?.length ? cs.narrative : deriveNarrative(project);
+  const caseNumber = String(index + 1).padStart(2, "0");
+  const prev = projects[(index - 1 + projects.length) % projects.length];
+  const next = projects[(index + 1) % projects.length];
 
-  // Each toggleable section returns its markup, or null when the project has no
-  // content for it. The page renders these in the order given by the project's
-  // `sections` list (falling back to DEFAULT_SECTION_ORDER).
-  const sectionRenderers: Record<SectionKey, () => React.ReactNode> = {
-    summary: () =>
-      hasSummary ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className="md:col-span-2 bg-[rgba(88,87,87,0.2)] border border-[#262626] rounded-[16px] p-8 space-y-10">
-            {project.challenge && (
-              <section>
-                <h2 className="text-2xl sm:text-3xl font-bold font-['Outfit',sans-serif] mb-4">The Challenge</h2>
-                <p className="text-lg sm:text-xl text-[#9f9fa9] leading-relaxed">{project.challenge}</p>
-              </section>
-            )}
-            {project.solution && (
-              <section>
-                <h2 className="text-2xl sm:text-3xl font-bold font-['Outfit',sans-serif] mb-4">The Solution</h2>
-                <p className="text-lg sm:text-xl text-[#9f9fa9] leading-relaxed">{project.solution}</p>
-              </section>
-            )}
-          </div>
+  const factRows =
+    project.factBox ??
+    [
+      { label: "Role", value: project.role.toUpperCase() },
+      { label: "Timeframe", value: project.year.toUpperCase() },
+      { label: "Category", value: project.category.toUpperCase() },
+    ];
+  const tags = project.tags ?? project.skills?.slice(0, 3) ?? [];
 
-          <div className="bg-[rgba(42,42,42,0.2)] border border-[#262626] rounded-[16px] p-8 flex flex-col">
-            <h3 className="text-lg font-bold font-['Outfit',sans-serif] mb-4">Deliverables</h3>
-            <ul className="space-y-3 text-zinc-400">
-              {deliverables.map((d) => (
-                <li key={d} className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" /> {d}
-                </li>
-              ))}
-            </ul>
-            {project.liveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 sm:mt-auto self-end inline-flex items-center justify-center gap-2 py-4 px-6 rounded-full bg-white text-black font-medium hover:bg-zinc-200 transition-colors"
-              >
-                {project.liveLabel ?? "Visit Live Site"} <ExternalLink className="w-4 h-4" />
-                <span className="sr-only"> (opens in new tab)</span>
-              </a>
-            )}
-          </div>
+  return (
+    <motion.article initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-16 sm:gap-24">
+      {/* HEADER */}
+      <header className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-[60px]">
+        <div className="flex min-w-0 flex-1 flex-col gap-6">
+          <Link
+            to="/#work"
+            className={`${mono} flex w-max gap-1.5 text-[13px] font-bold leading-[1.4] transition-colors hover:text-[#FE6219]`}
+          >
+            <span aria-hidden="true" className="text-[#FE6219]">\\</span>
+            <span className="text-[#A3A3A3]">Work / Case-{caseNumber}</span>
+          </Link>
+          <h1 className="font-['Space_Grotesk',sans-serif] text-[34px] font-bold leading-[1.1] text-[#F7F7F7] sm:text-[48px]">
+            {project.title}.
+          </h1>
+          {project.hook && (
+            <p className="max-w-[640px] font-['Space_Grotesk',sans-serif] text-[18px] leading-[1.6] text-[#A3A3A3] sm:text-[20px]">
+              {project.hook}
+            </p>
+          )}
         </div>
-      ) : null,
 
-    overview: () =>
-      cs?.overview ? (
-        <motion.section
+        <div className="flex w-full flex-col gap-4 lg:w-[520px] lg:shrink-0">
+          <FactBox rows={factRows} />
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {tags.map((t) => (
+                <Tag key={t}>{t}</Tag>
+              ))}
+            </div>
+          )}
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${mono} flex w-max items-center gap-2 rounded-[4px] border border-[#FE6219] px-3.5 py-2 text-[11px] font-bold text-[#F7F7F7] transition-colors hover:bg-[#FE6219] hover:text-[#141414]`}
+            >
+              {project.liveLabel ?? "Visit live site"}
+              <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <span className="sr-only"> (opens in new tab)</span>
+            </a>
+          )}
+        </div>
+      </header>
+
+      {/* HERO */}
+      <div className="relative h-[280px] w-full overflow-hidden rounded-[8px] bg-[#2A2A2A] sm:h-[420px] lg:h-[500px]">
+        <img src={project.image} alt={project.title} className="absolute inset-0 h-full w-full object-cover" />
+        <CornerBrackets />
+      </div>
+
+      <TickRail />
+
+      {/* NARRATIVE ARC */}
+      {narrative.map((s, i) => {
+        const code = `SEC-${String(i + 1).padStart(2, "0")} ${s.code}`;
+        const imageRight = i % 2 === 0;
+        const text = (
+          <div className="flex min-w-0 flex-1 flex-col gap-8">
+            <SectionHeader code={code} heading={s.heading} />
+            <p className="max-w-[68ch] font-['Space_Grotesk',sans-serif] text-[17px] leading-[1.6] text-[#F7F7F7]">
+              {s.body}
+            </p>
+          </div>
+        );
+        return (
+          <motion.section
+            key={code}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5 }}
+            className={`flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-[60px] ${
+              imageRight ? "" : "lg:flex-row-reverse"
+            }`}
+          >
+            {text}
+            {s.image && (
+              <ImageBlock
+                src={s.image}
+                alt={s.imageAlt ?? ""}
+                caption={s.caption}
+                className="w-full lg:w-[48%] lg:shrink-0"
+                imageClassName="h-[240px] sm:h-[340px]"
+              />
+            )}
+          </motion.section>
+        );
+      })}
+
+      {/* QUOTE */}
+      {cs?.quote && (
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-3xl mx-auto text-center my-16"
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-light font-['Outfit',sans-serif] text-white mb-4">Overview</h2>
-          <p className="text-xl text-[#9f9fa9] leading-relaxed">{cs.overview}</p>
-        </motion.section>
-      ) : null,
+          <QuoteReference quote={cs.quote.text} source={cs.quote.source} />
+        </motion.div>
+      )}
 
-    story: () =>
-      cs?.story && cs.story.slides.length > 0 ? <StoryGallery story={cs.story} /> : null,
+      {/* FIGURES */}
+      {cs?.figures && cs.figures.length > 0 && (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {cs.figures.map((f) => (
+            <ImageBlock
+              key={f.src + f.caption}
+              src={f.src}
+              alt={f.alt}
+              caption={f.caption}
+              imageClassName="h-[280px] sm:h-[420px]"
+            />
+          ))}
+        </div>
+      )}
 
-    galleries: () =>
-      cs?.galleries && cs.galleries.length > 0 ? <Galleries galleries={cs.galleries} /> : null,
+      {/* STATS */}
+      {cs?.stats && cs.stats.length > 0 && <StatsReadout stats={cs.stats} />}
 
-    approach: () =>
-      cs?.approach && cs.approach.length > 0 ? (
-        <section className="my-20">
-          <SectionHeading>Approach</SectionHeading>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {cs.approach.map((item, i) => (
-              <NumberedCard key={item.title} index={i + 1} item={item} />
+      {/* Rich media kept from the earlier case studies (Rebo, Neon Cloud). */}
+      {cs?.story && cs.story.slides.length > 0 && <StoryGallery story={cs.story} />}
+      {cs?.galleries && cs.galleries.length > 0 && <Galleries galleries={cs.galleries} />}
+
+      {/* KNOWLEDGE GAINED */}
+      {cs?.knowledgeGained && cs.knowledgeGained.length > 0 && (
+        <section className="flex flex-col gap-4">
+          <p className={`${mono} flex gap-1.5 text-[13px] font-bold text-[#FE6219]`}>
+            <span aria-hidden="true">\\</span>
+            <span className="text-[#A3A3A3]">Knowledge gained</span>
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {cs.knowledgeGained.map((k) => (
+              <Tag key={k}>{k}</Tag>
             ))}
           </div>
         </section>
-      ) : null,
+      )}
 
-    finalState: () =>
-      cs?.finalState ? (
-        <section className="my-20">
-          <SectionHeading>Final State</SectionHeading>
-          <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start">
-            <div className="shrink-0 w-full max-w-[400px] aspect-square rounded-[16px] border border-white/10 bg-[#152028] overflow-hidden shadow-2xl">
-              <ImageWithFallback
-                src={cs.finalState.image}
-                alt={cs.finalState.alt ?? "Final prototype"}
-                className="w-full h-full object-cover object-top"
-              />
-            </div>
-            <div className="flex-1 w-full grid grid-cols-1 gap-6">
-              {cs.finalState.items.map((item, i) => (
-                <NumberedCard key={item.title} index={i + 1} item={item} />
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null,
+      <TickRail />
 
-    keyLearnings: () => {
-      const hasLearnings = !!cs?.keyLearnings && cs.keyLearnings.length > 0;
-      const hasKnowledge = !!cs?.knowledgeGained && cs.knowledgeGained.length > 0;
-      if (!hasLearnings && !hasKnowledge) return null;
-      return (
-        <section className="my-20">
-          <SectionHeading>Key Learnings</SectionHeading>
-          {hasLearnings && (
-            <div className="grid grid-cols-1 gap-6">
-              {cs!.keyLearnings!.map((learning: KeyLearning, i) => (
-                <NumberedCard
-                  key={learning.title}
-                  index={i + 1}
-                  item={{ title: learning.title, body: learning.body ?? "" }}
-                  bullets={learning.bullets}
-                  variant="learning"
-                />
-              ))}
-            </div>
-          )}
-          {hasKnowledge && (
-            <div className={hasLearnings ? "mt-10" : ""}>
-              <h3 className="text-lg font-bold font-['Outfit',sans-serif] text-zinc-300 mb-4">Knowledge gained</h3>
-              <div className="flex flex-wrap gap-3">
-                {cs!.knowledgeGained!.map((item) => (
-                  <span
-                    key={item}
-                    className="px-4 py-2 rounded-full bg-[rgba(7,110,116,0.1)] border border-white/10 text-zinc-200 text-sm font-medium"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-        </section>
-      );
-    },
-  };
-
-  const order = project.sections ?? DEFAULT_SECTION_ORDER;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="max-w-5xl mx-auto"
-    >
-      <Link to="/" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-8 transition-colors">
-        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 hover:bg-white/10 transition-colors">
-          <ArrowLeft className="w-5 h-5" />
-        </div>
-        <span className="font-medium">Back to Projects</span>
-      </Link>
-
-      {/* Title + meta */}
-      <div className="mb-10">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-5xl sm:text-6xl font-black font-['Outfit',sans-serif] tracking-tight mb-6"
-        >
-          {project.title}
-        </motion.h1>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="flex flex-wrap gap-4 sm:gap-8 text-zinc-400 border-y border-white/10 py-6"
-        >
-          <div className="flex items-center gap-2">
-            <User className="w-5 h-5" />
-            <span>{project.role}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5" />
-            <span>{project.year}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: project.color }} />
-            <span>{project.category}</span>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Hero with orange glow */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="w-full aspect-video rounded-[16px] overflow-hidden mb-16 border border-[#ff6d1f] shadow-[3px_6px_24px_0px_rgba(255,109,31,0.45)]"
-      >
-        <ImageWithFallback src={project.image} alt={project.title} className="w-full h-full object-cover" />
-      </motion.div>
-
-      {/* Toggleable sections, in the project's chosen order */}
-      {order.map((key) => (
-        <div key={key}>{sectionRenderers[key]()}</div>
-      ))}
-    </motion.div>
+      {/* PREV / NEXT */}
+      <nav aria-label="Project navigation" className="flex items-center justify-between gap-4 pb-4">
+        <Link to={`/project/${prev.slug}`} className="group flex items-center gap-3">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-[4px] border border-[#4D4D4D]/40 text-[#A3A3A3] transition-colors group-hover:border-[#FE6219] group-hover:text-[#FE6219]">
+            <ArrowLeft className="h-5 w-5" strokeWidth={1.5} />
+          </span>
+          <span className={`${mono} hidden text-[13px] font-bold text-[#FE6219] sm:block`}>Previous project</span>
+        </Link>
+        <Link to={`/project/${next.slug}`} className="group flex items-center gap-3">
+          <span className={`${mono} hidden text-[13px] font-bold text-[#FE6219] sm:block`}>Next project</span>
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-[4px] border border-[#4D4D4D]/40 text-[#A3A3A3] transition-colors group-hover:border-[#FE6219] group-hover:text-[#FE6219]">
+            <ArrowRight className="h-5 w-5" strokeWidth={1.5} />
+          </span>
+        </Link>
+      </nav>
+    </motion.article>
   );
 }

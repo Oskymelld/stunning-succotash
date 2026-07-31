@@ -74,8 +74,32 @@ export interface FinalState {
   items: FeatureItem[];
 }
 
+// One beat of the case-study arc (Context → Problem → Approach → Outcome →
+// Reflection), rendered as an orange SEC-0X marker, heading, body and an
+// optional image that alternates side as you scroll.
+export interface NarrativeSection {
+  code: string; // e.g. "CONTEXT" — the SEC-0X number is added automatically
+  heading: string;
+  body: string;
+  image?: string;
+  imageAlt?: string;
+  caption?: string;
+}
+
+export interface Stat {
+  value: string;
+  label: string;
+}
+
 // Extra sections shown only on full case-study projects, in this order.
 export interface CaseStudy {
+  // The V3 case-study template (Figma node 129:927). When present this drives
+  // the page; the older section list below is the fallback for projects that
+  // haven't been rewritten into the arc yet.
+  narrative?: NarrativeSection[];
+  quote?: { text: string; source: string };
+  stats?: Stat[];
+  figures?: { src: string; alt: string; caption?: string }[];
   overview?: string;
   story?: Story;
   galleries?: Gallery[];
@@ -131,6 +155,12 @@ export interface Project {
   copyReady?: boolean;
   liveUrl?: string;
   liveLabel?: string;
+  // One-line provocation under the title on the case-study page.
+  hook?: string;
+  // Scannable metadata panel in the page header.
+  factBox?: { label: string; value: string }[];
+  // Discipline / brand / year chips under the fact box.
+  tags?: string[];
   // Rich case-study sections below the summary (optional).
   caseStudy?: CaseStudy;
   // Which sections to show, and in what order. Omit a name to hide that
@@ -383,74 +413,59 @@ export const projects: Project[] = [
     liveUrl: "https://everboundgoods.com",
     liveLabel: "Visit everboundgoods.com",
     copyReady: true,
-    sections: ["summary", "overview", "galleries", "approach", "finalState", "keyLearnings"],
+    hook: "Twelve years designing machines for millions of people. Now I make one thing at a time, by hand.",
+    factBox: [
+      { label: "Role", value: "FOUNDER · DESIGN · MAKER" },
+      { label: "Team", value: "ME & LUCY (CO-FOUNDER)" },
+      { label: "Timeframe", value: "INCORPORATED JULY 2025 · ONGOING" },
+      { label: "Tools", value: "HAND TOOLS · 3D PRINTING · PHOTOGRAMMETRY" },
+    ],
+    tags: ["DESIGNER-MAKER", "EVERBOUND", "2025 –"],
     caseStudy: {
-      overview:
-        "I spent over a decade at Dyson designing consumer electronics, and somewhere along the way I'd drifted from being a hands-on maker into managing people — which didn't suit me. Leatherwork started as an evening class at the Folk House in Bristol, a way of getting back to making things. Three years later, a redundancy and a two-day course on running a creative business turned the hobby into a company. Everbound Goods is run with my wife Lucy: I take design, patterns, the more complex builds and the website; Lucy runs social, admin, marketing and outreach.",
-      galleries: [
+      narrative: [
         {
-          label: "From the workshop",
-          link: { label: "Visit everboundgoods.com", url: "https://everboundgoods.com" },
-          images: [
-            { src: everboundHero, alt: "Three finished Everbound belts with solid brass buckles and the debossed EG maker's mark" },
-            { src: everboundStraps, alt: "Two hand-stitched belt straps on a cutting mat, one showing the debossed EG logo" },
-            { src: everboundBench, alt: "The workbench: pricking irons, edge beveller, awl, thread and offcuts of veg tan leather on a cutting mat" },
-          ],
+          code: "CONTEXT",
+          heading: "Context",
+          body: "I spent over a decade at Dyson designing consumer electronics, and somewhere along the way I'd drifted from being a hands-on maker into managing people — which didn't suit me. Leatherwork started as an evening class at the Folk House in Bristol, a way of getting back to making things. Three years later, a redundancy and a two-day course on running a creative business at Bayes Business School turned the hobby into a company. Everbound Goods is run with my wife Lucy: I take design, patterns, the more complex builds and the website; Lucy runs social, admin, marketing and outreach.",
+          image: everboundBench,
+          imageAlt: "The Everbound workbench: pricking irons, edge beveller, awl, thread and offcuts of veg tan leather on a cutting mat",
+          caption: "Fig.01 — The bench. Every piece starts and finishes here.",
+        },
+        {
+          code: "PROBLEM",
+          heading: "Problem",
+          body: "My career had moved further and further into the digital world, and I missed making things with my hands. The market had the same gap in it. Leather goods split into two camps: fast and cheap, often chrome-tanned and coated to look like something they aren't, or slow and expensive and almost entirely out of reach. There was very little in between — pieces made properly, from honest materials, at a price a normal person could justify. The hard part was never the craft. It was everything around it: turning a skill into a product line, a product line into a brand, and a brand into something that sells on four to six hours a week.",
+          image: everboundStraps,
+          imageAlt: "Two hand-stitched belt straps on a cutting mat, one showing the debossed EG maker's mark",
+          caption: "Fig.02 — Hand-stitched straps, debossed rather than printed.",
+        },
+        {
+          code: "APPROACH",
+          heading: "Approach",
+          body: "Markets turned out to be the best research instrument we have. You watch which pieces people pick up first, which questions come up every time, and which price points make someone pause — the closest thing to contextual enquiry you can get while also taking payment. What surprised me most was how many people ask where the leather comes from. The material principles were set up front: veg tan full grain leather, solid honest hardware with no fake coatings, and Ritza thread designed for hand stitching. Then the day job earns its keep — I use image photogrammetry to map each hide and maximise yield, and 3D printing to make dies, tools and jigs that speed up production without making it less handmade. We deliberately buy leather with defects that larger manufacturers reject and work around the damage: better economics and considerably less waste, from the same decision.",
+          image: everboundHero,
+          imageAlt: "Three finished Everbound belts with solid brass buckles and the debossed EG maker's mark",
+          caption: "Fig.03 — Holstein 001 belts, brass hardware, finished by hand.",
+        },
+        {
+          code: "OUTCOME",
+          heading: "Outcome",
+          body: "Three collections are in production: Holstein 001 in jet black from Thomas Ware & Sons in Bristol, Saddle Brown 002 in natural tan from A&A Crack & Sons in Northampton, and the Tuscany Belt Collection in Italian veg tan. Every piece is shaped, stitched and finished by hand — there is no sewing machine anywhere in the process. It's slower, and that's the point: time spent where it has the most value. The business runs alongside two full-time jobs, roughly four to six hours a week from me and two to four from Lucy, rising sharply before a market. Markets are the bulk of sales today; growing the website so we rely on them less is the current priority.",
+        },
+        {
+          code: "REFLECTION",
+          heading: "Reflection",
+          body: "I'd been terrified of trying this for years. What finally worked wasn't more confidence — it was a deadline and a dining room table, which is where the first batch was made. The job also turned out to be far bigger than the craft: videographer, photographer, SEO and marketing, data analytics, front-end web developer and IT department. The making is the part I trained for; almost none of the rest of it was. The bespoke side is where the two careers meet, and it's the part I'm most interested in — I'm building it using human-centred design principles from my service design day job and ideas from Will Guidara's Unreasonable Hospitality, the argument that the memorable part of a service is rarely the product itself but the attention paid around it. For a commission that means the conversation, the updates and the handover matter as much as the stitching. What I keep coming back to: someone holding one of our pieces knows exactly who made it, which is precisely the thing that got squeezed out of the work I used to do.",
         },
       ],
-      approach: [
-        {
-          title: "Learn the business, not just the craft",
-          body: "The push came from redundancy at Dyson, and the timing happened to coincide with a two-day course on running a creative business at Bayes Business School. Between job hunting and that course, I finally had the time (and the nudge) to attempt something I'd been quietly terrified of for years.",
-        },
-        {
-          title: "Use markets as research",
-          body: "Most of our sales still come from craft markets around Bristol, and they've turned out to be the best research instrument we have. You watch which pieces people pick up first, which questions come up every time, and which price points make someone pause. It's the closest thing to contextual enquiry you can get while also taking payment. The thing that surprised me most: how many people ask where the leather comes from.",
-        },
-        {
-          title: "Decide the material principles up front",
-          body: "Veg tan full grain leather, tanned the way hides have been preserved for centuries. Solid honest hardware with no fake coatings. Ritza thread, designed for hand stitching. Veg tan is a byproduct of the meat industry, biodegradable, and it ages rather than degrades — the sustainability argument and the aesthetic argument at the same time.",
-        },
-        {
-          title: "Bring the engineering to the bench",
-          body: "This is where the day job earns its keep. I use image photogrammetry to map each hide and maximise yield, and 3D printing to produce dies, tools and jigs that make production more efficient without making it less handmade. We deliberately buy leather with defects and marks that larger manufacturers can't use, then work around the damage — better economics and considerably less waste, from the same decision.",
-        },
-      ],
-      finalState: {
-        image: everboundHero,
-        alt: "Three finished Everbound belts with solid brass buckles and the debossed EG maker's mark",
-        items: [
-          {
-            title: "A real product line",
-            body: "Three collections in production: Holstein 001 in jet black from Thomas Ware & Sons in Bristol, Saddle Brown 002 in natural tan from A&A Crack & Sons in Northampton, and the Tuscany Belt Collection in Italian veg tan.",
-          },
-          {
-            title: "Made entirely by hand",
-            body: "Every piece is shaped, stitched and finished by hand — no sewing machines anywhere in the process. It's slower, and that's the point: time spent where it has the most value.",
-          },
-          {
-            title: "Running alongside two full-time jobs",
-            body: "Roughly four to six hours a week from me and two to four from Lucy, rising sharply before a market. Markets are the bulk of sales today; growing the website so we rely on them less is the current priority.",
-          },
-        ],
+      quote: {
+        text: "Quiet luxury without excess. Traceable leather, each stitch made with intention, creating pieces that will stand the test of time and a lifetime of adventure.",
+        source: "— EVERBOUND GOODS, BRAND MISSION",
       },
-      keyLearnings: [
-        {
-          title: "Starting before I felt ready was the thing that worked",
-          body: "I'd been terrified of trying this for years. What finally worked wasn't more confidence — it was a deadline and a dining room table, which is where the first batch was made.",
-        },
-        {
-          title: "The job turned out to be much bigger than the craft",
-          body: "I quickly realised it now included videographer, photographer, SEO and marketing, data analytics, front-end web developer and IT department. The making is the part I trained for; almost none of the rest of it was.",
-        },
-        {
-          title: "Bespoke work is where the two careers meet",
-          body: "I'm building that capability using human-centred design principles from my service design day job and ideas from Will Guidara's Unreasonable Hospitality — the argument that the memorable part of a service is rarely the product itself, but the attention paid around it. For a commission, the conversation, the updates and the handover matter as much as the stitching.",
-        },
-        {
-          title: "Putting a face to the maker is worth more than any feature",
-          body: "Someone holding one of our pieces knows exactly who made it — which is precisely the thing that got squeezed out of the work I used to do.",
-        },
+      stats: [
+        { value: "3", label: "Collections in production" },
+        { value: "0", label: "Sewing machines used" },
+        { value: "2025", label: "Year incorporated" },
       ],
       knowledgeGained: [
         "Veg tan leatherwork",
